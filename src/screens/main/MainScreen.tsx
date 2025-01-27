@@ -1,9 +1,16 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import {ScrollView} from 'react-native';
+import Geolocation from 'react-native-geolocation-service';
 
 import CurrentDisplay from './CurrentDisplay';
 
 export default function MainScreen() {
+  useEffect(() => {
+    Geolocation.getCurrentPosition(position => {
+      const {latitude, longitude} = position.coords;
+      console.log(latitude, longitude);
+    });
+  }, []);
   return (
     <ScrollView>
       {/* currentDisplay */}
