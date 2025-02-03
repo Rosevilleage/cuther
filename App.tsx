@@ -4,11 +4,15 @@
  *
  * @format
  */
-import 'react-native-gesture-handler';
 import React, {useEffect} from 'react';
 import Navigation from './src/navigation';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
+import {SafeAreaProvider} from 'react-native-safe-area-context';
+
+import {enableScreens} from 'react-native-screens';
+
+enableScreens(false);
 
 function App(): React.JSX.Element {
   useEffect(() => {
@@ -20,7 +24,11 @@ function App(): React.JSX.Element {
       );
     }
   }, []);
-  return <Navigation />;
+  return (
+    <SafeAreaProvider>
+      <Navigation />
+    </SafeAreaProvider>
+  );
 }
 
 export default App;
