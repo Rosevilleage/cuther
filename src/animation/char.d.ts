@@ -1,15 +1,8 @@
-export type CaractorPath =
-  | 'chair'
-  | 'cherry blossoms'
-  | 'Circulator'
-  | 'coat'
-  | 'cold'
-  | 'headphone'
-  | 'lev-char-half'
-  | 'trench';
+export type Size = 'small' | 'medium' | 'lage';
 
-export interface CharAnimationProp {
+export interface AnimationCharProps {
   loop?: boolean;
   autoPlay?: boolean;
-  size: 'small' | 'medium' | 'lage';
+  src: string;
+  style?: StyleProp<ViewStyle>;
 }
