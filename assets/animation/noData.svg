@@ -1,0 +1,140 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   id="_레이어_1"
+   data-name="레이어 1"
+   viewBox="0 0 226.69 381.11"
+   version="1.1"
+   sodipodi:docname="search.svg"
+   inkscape:version="1.4 (e7c3feb1, 2024-10-09)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <sodipodi:namedview
+     id="namedview9"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     inkscape:zoom="2.6475297"
+     inkscape:cx="113.31318"
+     inkscape:cy="190.36614"
+     inkscape:window-width="2560"
+     inkscape:window-height="1387"
+     inkscape:window-x="0"
+     inkscape:window-y="25"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="_레이어_1" />
+  <defs
+     id="defs1">
+    <style
+       id="style1">
+      .cls-1 {
+        fill: #fff;
+      }
+
+      .cls-1, .cls-2, .cls-3, .cls-4, .cls-5, .cls-6 {
+        stroke-miterlimit: 10;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-5 {
+        stroke-width: 3px;
+      }
+
+      .cls-1, .cls-2, .cls-4, .cls-5, .cls-6 {
+        stroke: #231815;
+      }
+
+      .cls-2 {
+        fill: #9fa0a0;
+      }
+
+      .cls-3 {
+        stroke: #e83828;
+        stroke-linecap: round;
+        stroke-width: 9px;
+      }
+
+      .cls-3, .cls-4 {
+        fill: none;
+      }
+
+      .cls-5 {
+        fill: #fffef3;
+      }
+
+      .cls-6 {
+        fill: #231815;
+        stroke-width: .5px;
+      }
+    </style>
+  </defs>
+  <path
+     class="cls-1"
+     d="m 59.83,362.98 c 0,0 -12.42,6.48 -2.49,7.47 9.93,0.99 34.44,1.16 34.44,1.16 0,0 12.59,-1.56 7.62,-7.74 -4.97,-6.18 -39.57,-0.9 -39.57,-0.9 z"
+     id="path1" />
+  <path
+     class="cls-1"
+     d="m 166.01,362.98 c 0,0 12.42,6.48 2.49,7.47 -9.94,0.99 -34.44,1.16 -34.44,1.16 0,0 -12.59,-1.56 -7.62,-7.74 4.97,-6.18 39.57,-0.9 39.57,-0.9 z"
+     id="path2" />
+  <path
+     class="cls-2"
+     d="m 173.91,279.77 v 78.72 c 0,0 0,0.06 0.03,0.08 0.39,0.41 4.19,4.95 -21.09,5.27 -25.01,0.31 -33.19,-1.74 -34.02,-1.97 -0.05,-0.01 -0.08,-0.05 -0.08,-0.1 l -5.41,-39.1 c -0.02,-0.14 -0.22,-0.14 -0.24,0 l -5.41,39.1 c 0,0 -0.04,0.08 -0.08,0.1 -0.83,0.23 -9,2.28 -34.02,1.97 -25.28,-0.32 -21.48,-4.86 -21.09,-5.27 0.02,-0.02 0.03,-0.05 0.03,-0.08 v -78.72"
+     id="path3" />
+  <path
+     class="cls-4"
+     d="m 68.2,291.46 c 0,0 9.27,18.22 -9.6,10.6"
+     id="path4" />
+  <path
+     class="cls-4"
+     d="m 160.03,291.46 c 0,0 -9.27,18.22 9.6,10.6"
+     id="path5" />
+  <path
+     class="cls-5"
+     d="m 224.31568,153.38628 c 0,0 -4.86244,50.76163 -44.62236,69.24924 0,0 -5.74287,1.18462 -5.74287,11.07204 0,9.88742 0,49.83818 0,49.83818 0,0 -3.91196,9.477 -60.72043,9.477 -56.80846,0 -60.720421,-9.477 -60.720421,-9.477 v -49.83818 c 0,-9.88742 -5.742877,-11.07204 -5.742877,-11.07204 C 7.0068008,204.14791 2.1443645,153.38628 2.1443645,153.38628 l 25.7629085,-10.2512 c 4.892451,13.59054 33.656863,40.19329 33.656863,40.19329 0,0 89.684934,-3.08749 102.941574,0 13.25665,3.08748 33.34671,-40.5664 33.34671,-40.5664 l 26.46326,10.61498 z"
+     id="path6" />
+  <path
+     class="cls-1"
+     d="m 22.95,157.76 c 0,0 16.28,-17.22 -5.11,-21.2 -21.39,-3.98 -15.65,17.66 -15.65,17.66 0,0 6.18,13.25 20.75,3.53 z"
+     id="path7" />
+  <path
+     class="cls-1"
+     d="m 203.74,157.76 c 0,0 -16.28,-17.22 5.11,-21.2 21.39,-3.98 15.65,17.66 15.65,17.66 0,0 -6.18,13.25 -20.75,3.53 z"
+     id="path8" />
+  <circle
+     class="cls-1"
+     cx="113.23"
+     cy="107.03"
+     id="circle8"
+     r="99.529999" />
+  <rect
+     class="cls-6"
+     x="36.77"
+     y="71.339996"
+     width="152.92"
+     height="101.84"
+     rx="36.799999"
+     ry="36.799999"
+     id="rect8" />
+  <g
+     id="g9"
+     transform="translate(0,6)">
+    <line
+       class="cls-3"
+       x1="88.360001"
+       y1="143.53999"
+       x2="138.34"
+       y2="93.57"
+       id="line8" />
+    <line
+       class="cls-3"
+       x1="88.360001"
+       y1="93.57"
+       x2="138.34"
+       y2="143.53999"
+       id="line9" />
+  </g>
+</svg>
