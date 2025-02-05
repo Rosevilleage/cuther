@@ -5,7 +5,7 @@
  * @format
  */
 import React, {useEffect} from 'react';
-import Navigation from './src/navigation';
+import Navigation from './src/interface/navigation';
 import {PermissionsAndroid, Platform} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
