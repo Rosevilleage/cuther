@@ -2,7 +2,7 @@ import React, {useEffect} from 'react';
 import {ScrollView, useWindowDimensions} from 'react-native';
 import Geolocation from 'react-native-geolocation-service';
 
-import CurrentDisplay from './CurrentDisplay';
+import CurrentDisplay from '../../widgets/CurrentDisplay';
 // import {getPlaceName, getWetherData} from '../../services/fetcher';
 
 export default function MainScreen() {
