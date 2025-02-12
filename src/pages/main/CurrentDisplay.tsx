@@ -1,7 +1,7 @@
 import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 
-import CharactorRenderer from '../../components/CharactorRenderer';
+import CharactorRenderer from '../../features/weather/ui/CharactorRenderer';
 
 export default function CurrentDisplay() {
   return (

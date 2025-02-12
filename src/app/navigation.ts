@@ -1,5 +1,5 @@
 import {createDrawerNavigator} from '@react-navigation/drawer';
-import MainScreen from './../screens/main/MainScreen';
+import MainScreen from '../pages/main/MainScreen';
 import {createStaticNavigation} from '@react-navigation/native';
 
 const MainDrawer = createDrawerNavigator({
