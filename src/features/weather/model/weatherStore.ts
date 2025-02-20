@@ -4,6 +4,7 @@ import {CurWeather, Weather, Weathers} from '../../../entitites/Weather';
 interface WeatherStore {
   currentWeather: CurWeather;
   weathers: Weathers;
+  sunRiseSet: [string, string];
   setCurWeather: <T extends keyof CurWeather>(
     key: T,
     value: CurWeather[T],
@@ -11,11 +12,13 @@ interface WeatherStore {
   changeCurWeather: (newWeather: CurWeather) => void;
   setWeathers: (newWeathers: Weathers) => void;
   changeWeathers: (date: string, time: string, value: Weather) => void;
+  setSunRiseSet: (newRiseSet: [string, string]) => void;
 }
 
 export const useWeatherStore = create<WeatherStore>(set => ({
   currentWeather: new CurWeather(0, 0, 0, 0, 0, 0, '', 0),
   weathers: {},
+  sunRiseSet: ['', ''],
   setCurWeather(key, value) {
     set(state => ({
       ...state,
@@ -36,5 +39,8 @@ export const useWeatherStore = create<WeatherStore>(set => ({
         [date]: {...state.weathers[date], [time]: value},
       },
     }));
+  },
+  setSunRiseSet(newRiseSet) {
+    set(state => ({...state, sunRiseSet: newRiseSet}));
   },
 }));
