@@ -1,14 +1,14 @@
 import React from 'react';
 import {genWeatherStatus} from '../lib/weatherUtil';
-import Sun from './../../../assets/icons/svg/sun.svg';
-import Moon from './../../../assets/icons/svg/moon.svg';
-import SunCloud from './../../../assets/icons/svg/sun_clouid.svg';
-import MoonCloud from './../../../assets/icons/svg/moon_cloud.svg';
-import Cloud from './../../../assets/icons/svg/cloud.svg';
-import Rain from './../../../assets/icons/svg/rain.svg';
-import Snow from './../../../assets/icons/svg/snow.svg';
-import RainSnow from './../../../assets/icons/svg/rainSnow.svg';
-// import Thunder from './../../../assets/icons/svg/thunder.svg';
+import Sun from './../../../assets/icons/svg/sun_icon.svg';
+import Moon from './../../../assets/icons/svg/moon_icon.svg';
+import SunCloud from './../../../assets/icons/svg/sun_clouid_icon.svg';
+import MoonCloud from './../../../assets/icons/svg/moon_cloud_icon.svg';
+import Cloud from './../../../assets/icons/svg/cloud_icon.svg';
+import Rain from './../../../assets/icons/svg/rain_icon.svg';
+import Snow from './../../../assets/icons/svg/snow_icon.svg';
+import RainSnow from './../../../assets/icons/svg/rainSnow_icon.svg';
+// import Thunder from './../../../assets/icons/svg/thunder_icon.svg';
 
 export default function WeatherConditionRenderer({
   condition,
