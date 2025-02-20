@@ -1,5 +1,5 @@
 import React, {useMemo} from 'react';
-import NoData from './../../assets/animation/noData.svg';
+import NoData from './../../../assets/animation/noData.svg';
 import {StyleProp, Text, View, ViewStyle} from 'react-native';
 import LottieView from 'lottie-react-native';
 
@@ -7,14 +7,14 @@ import LottieView from 'lottie-react-native';
 
 const charactors = {
   0: {src: ''},
-  1: {src: require('./../../assets/animation/Circulator.json')},
-  2: {src: require('./../../assets/animation/lev-char-half.json')},
-  3: {src: require('./../../assets/animation/cherry blossoms.json')},
-  4: {src: require('./../../assets/animation/headphone.json')},
-  5: {src: require('./../../assets/animation/chair.json')},
-  6: {src: require('./../../assets/animation/trench.json')},
-  7: {src: require('./../../assets/animation/coat.json')},
-  8: {src: require('./../../assets/animation/cold.json')},
+  1: {src: require('./../../../assets/animation/Circulator.json')},
+  2: {src: require('./../../../assets/animation/lev-char-half.json')},
+  3: {src: require('./../../../assets/animation/cherry blossoms.json')},
+  4: {src: require('./../../../assets/animation/headphone.json')},
+  5: {src: require('./../../../assets/animation/chair.json')},
+  6: {src: require('./../../../assets/animation/trench.json')},
+  7: {src: require('./../../../assets/animation/coat.json')},
+  8: {src: require('./../../../assets/animation/cold.json')},
 };
 
 export default function CharactorRenderer({
