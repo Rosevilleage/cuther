@@ -2,8 +2,22 @@ import React from 'react';
 import {View, Image, Text, StyleSheet} from 'react-native';
 
 import CharactorRenderer from '../features/weather/ui/CharactorRenderer';
+import {useWeatherStore} from '../features/weather/model/weatherStore';
+import {
+  genWeatherCondition,
+  perceivedTemperatureToLevel,
+} from '../features/weather/lib/weatherUtil';
 
 export default function CurrentDisplay() {
+  const currentWeather = useWeatherStore(state => state.currentWeather);
+  const perceivedTempLevel = perceivedTemperatureToLevel(
+    currentWeather.perceivedTemperature,
+  );
+  const weatherConditionPath = genWeatherCondition(
+    currentWeather.condition,
+    currentWeather.rain,
+    true,
+  );
   return (
     <View style={styles.mainsection}>
       <View
@@ -14,15 +28,7 @@ export default function CurrentDisplay() {
           height: 400,
           overflow: 'hidden',
         }}>
-        {/* <CharactorRenderer type={0} loop autoPlay /> */}
-        <CharactorRenderer type={1} loop autoPlay />
-        {/* <CharactorRenderer type={2} loop autoPlay /> */}
-        {/* <CharactorRenderer type={3} loop autoPlay /> */}
-        {/* <CharactorRenderer type={4} loop autoPlay /> */}
-        {/* <CharactorRenderer type={5} loop autoPlay /> */}
-        {/* <CharactorRenderer type={6} loop autoPlay /> */}
-        {/* <CharactorRenderer type={7} loop autoPlay /> */}
-        {/* <CharactorRenderer type={8} loop autoPlay /> */}
+        <CharactorRenderer type={perceivedTempLevel} loop autoPlay />
       </View>
       <View style={styles.currentInfoContainer}>
         <View
@@ -37,23 +43,28 @@ export default function CurrentDisplay() {
           ]}>
           <Image
             resizeMode="contain"
-            source={require('./../../../assets/icons/sun.png')}
+            source={weatherConditionPath}
             style={{height: 55, flex: 1}}
           />
           <View style={{flex: 1, justifyContent: 'center'}}>
             <Text
               style={{
                 height: '100%',
-                fontSize: 55,
+                fontSize: 50,
               }}>
-              0도
+              {currentWeather.temperature}℃
             </Text>
           </View>
         </View>
         <View style={{flex: 1, paddingRight: 10, gap: 5}}>
           <Text style={{textAlign: 'right', fontSize: 20}}>서울 특별시</Text>
-          <Text style={{textAlign: 'right'}}>체감 기온 : 0</Text>
-          <Text style={{textAlign: 'right'}}>최고: 3도, 최저: 0도</Text>
+          <Text style={{textAlign: 'right', fontSize: 16}}>
+            체감 기온 : {currentWeather.perceivedTemperature}℃
+          </Text>
+          <Text style={{textAlign: 'right', fontSize: 16}}>
+            습도: {currentWeather.humidity}%, 풍속: {currentWeather.windSpeed}
+            m/s
+          </Text>
         </View>
       </View>
     </View>
