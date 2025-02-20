@@ -1,6 +1,5 @@
 import dayjs from 'dayjs';
 import {BaseDate, BaseTime} from '../model/weatherDTO';
-import {WEATHER_CONDITION_PATH} from '../constants';
 
 const baseTimes = [
   '0200',
@@ -106,7 +105,7 @@ export function perceivedTemperatureToLevel(
   return 0;
 }
 
-function genWeatherStatus(condition: number, rain: number) {
+export function genWeatherStatus(condition: number, rain: number) {
   if (rain !== 0) {
     if (rain === 1 || rain === 5) {
       return 'rain';
@@ -124,25 +123,5 @@ function genWeatherStatus(condition: number, rain: number) {
   if (condition === 3) {
     return 'littleCloud';
   }
-  if (condition === 4) {
-    return 'cloud';
-  }
-}
-
-export function genWeatherCondition(
-  condition: number,
-  rain: number,
-  light: boolean,
-) {
-  const status = genWeatherStatus(condition, rain);
-  if (status === 'clear' || status === 'littleCloud') {
-    return light
-      ? status === 'clear'
-        ? WEATHER_CONDITION_PATH.sun
-        : WEATHER_CONDITION_PATH.sunCloud
-      : status === 'clear'
-      ? WEATHER_CONDITION_PATH.moon
-      : WEATHER_CONDITION_PATH.moonCloud;
-  }
-  return WEATHER_CONDITION_PATH[status as keyof typeof WEATHER_CONDITION_PATH];
+  return 'cloud';
 }
