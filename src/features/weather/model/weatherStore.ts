@@ -16,7 +16,7 @@ interface WeatherStore {
 }
 
 export const useWeatherStore = create<WeatherStore>(set => ({
-  currentWeather: new CurWeather(0, 0, 0, 0, 0, 0, '', 0),
+  currentWeather: new CurWeather(0, 0, 0, 0, 0, '', 0),
   weathers: {},
   sunRiseSet: ['', ''],
   setCurWeather(key, value) {

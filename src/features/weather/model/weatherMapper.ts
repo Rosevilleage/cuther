@@ -7,7 +7,6 @@ export function ncstDTOToCurrentWeather(
 ): CurWeather {
   const result: CurWeather = {
     temperature: 0,
-    condition: 1,
     perceivedTemperature: 0,
     windDirection: '',
     windSpeed: 0,

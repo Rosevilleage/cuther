@@ -18,7 +18,6 @@ export class Weather {
 export class CurWeather {
   constructor(
     public temperature: number, // 기온
-    public condition: number, // 날씨 상태
     public perceivedTemperature: number, // 체감기온
     public rainWeight: number, // 강수량
     public humidity: number, // 습도
@@ -36,3 +35,11 @@ export class WeatherReport {
     public hourlyWeather: Weathers,
   ) {}
 }
+
+export type WeatherCondition =
+  | 'rain'
+  | 'rainSnow'
+  | 'snow'
+  | 'clear'
+  | 'littleCloud'
+  | 'cloud';
