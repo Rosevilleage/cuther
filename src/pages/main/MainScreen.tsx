@@ -1,54 +1,23 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {ScrollView, useWindowDimensions} from 'react-native';
-import Geolocation from 'react-native-geolocation-service';
 
 import CurrentDisplay from '../../widgets/CurrentDisplay';
-// import {getPlaceName, getWetherData} from '../../services/fetcher';
+import {useWeatherStore} from '../../features/weather/model/weatherStore';
 
 export default function MainScreen() {
-  // const [region, setRegion] = useState('');
-  useEffect(() => {
-    Geolocation.getCurrentPosition(async position => {
-      try {
-        const {latitude, longitude} = position.coords;
-        console.log(latitude, longitude);
-        if (latitude && longitude) {
-          //   const params = {
-          //     serviceKey: process.env.API_KEY as string,
-          //     numOfRows: 10,
-          //     pageNo: 1,
-          //     dataType: 'JSON',
-          //     base_date: '20250203',
-          //     base_time: '2030',
-          //     nx: 55,
-          //     ny: 127,
-          //   };
-          //   console.log(params);
-          //   const data = await fetcher.get('/getUltraSrtFcst', {params});
-          // console.log('fetch');
-          // const wetherData = await getWetherData('/getUltraSrtFcst', {
-          //   base_date: '20250203',
-          //   base_time: '2030',
-          //   nx: 55,
-          //   ny: 127,
-          // });
-          // console.log(wetherData.data);
-          // const placeData = await getPlaceName(latitude, longitude).then(res=>res.data);
-          // console.log(placeData);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    });
-  }, []);
-
   const {width, height} = useWindowDimensions();
+  const {currentWeather, sunRiseSet, weathers} = useWeatherStore();
+
+  const firstDate = Object.keys(weathers)[0];
+  const firstTime = Object.keys(weathers[firstDate])[0];
   return (
     <ScrollView style={{width, height}}>
       {/* currentDisplay */}
-      <CurrentDisplay />
-      {/* 초단기 */}
-      {/* <ScrollView horizontal>{}</ScrollView> */}
+      <CurrentDisplay
+        currentWeather={currentWeather}
+        sunRiseSet={sunRiseSet}
+        condition={weathers[firstDate][firstTime].condition}
+      />
       {/* 단기 */}
     </ScrollView>
   );

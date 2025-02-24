@@ -1,30 +1,32 @@
 import React from 'react';
-import {View, Image, Text, StyleSheet} from 'react-native';
+import {View, Text, StyleSheet} from 'react-native';
 
 import CharactorRenderer from '../features/weather/ui/CharactorRenderer';
-import {useWeatherStore} from '../features/weather/model/weatherStore';
-import {
-  genWeatherCondition,
-  perceivedTemperatureToLevel,
-} from '../features/weather/lib/weatherUtil';
+import {perceivedTemperatureToLevel} from '../features/weather/lib/weatherUtil';
+import dayjs from 'dayjs';
+import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
+import {usePlaceStore} from '../features/place/model/placeStore';
+import {CurWeather} from '../entitites/Weather';
 
-export default function CurrentDisplay() {
-  const currentWeather = useWeatherStore(state => state.currentWeather);
+export default function CurrentDisplay({
+  currentWeather,
+  sunRiseSet,
+  condition,
+}: {
+  currentWeather: CurWeather;
+  sunRiseSet: [string, string];
+  condition: number;
+}) {
+  const [sunRise, sunSet] = sunRiseSet;
   const perceivedTempLevel = perceivedTemperatureToLevel(
     currentWeather.perceivedTemperature,
   );
-  const weatherConditionPath = genWeatherCondition(
-    currentWeather.condition,
-    currentWeather.rain,
-    true,
-  );
+  const base_time = dayjs().format('HHmm');
+  const place = usePlaceStore(state => state.place);
   return (
     <View style={styles.mainsection}>
       <View
         style={{
-          borderWidth: 1,
-          borderStyle: 'solid',
-          borderColor: 'black',
           height: 400,
           overflow: 'hidden',
         }}>
@@ -41,12 +43,13 @@ export default function CurrentDisplay() {
               justifyContent: 'center',
             },
           ]}>
-          <Image
-            resizeMode="contain"
-            source={weatherConditionPath}
-            style={{height: 55, flex: 1}}
+          <WeatherConditionRenderer
+            condition={condition}
+            rain={currentWeather.rain}
+            light={+base_time >= +sunRise && +base_time <= +sunSet}
+            size={60}
           />
-          <View style={{flex: 1, justifyContent: 'center'}}>
+          <View style={{flex: 1, justifyContent: 'center', marginLeft: 15}}>
             <Text
               style={{
                 height: '100%',
@@ -57,13 +60,24 @@ export default function CurrentDisplay() {
           </View>
         </View>
         <View style={{flex: 1, paddingRight: 10, gap: 5}}>
-          <Text style={{textAlign: 'right', fontSize: 20}}>서울 특별시</Text>
-          <Text style={{textAlign: 'right', fontSize: 16}}>
-            체감 기온 : {currentWeather.perceivedTemperature}℃
+          <Text style={{textAlign: 'right', fontSize: 20}}>
+            {place.topRegion}
+            <Text style={{textAlign: 'right', fontSize: 16}}>
+              {' '}
+              {place.middleRegion}
+            </Text>
           </Text>
           <Text style={{textAlign: 'right', fontSize: 16}}>
-            습도: {currentWeather.humidity}%, 풍속: {currentWeather.windSpeed}
-            m/s
+            체감 기온 :{' '}
+            <Text style={styles.textBold}>
+              {currentWeather.perceivedTemperature}℃
+            </Text>
+          </Text>
+          <Text style={{textAlign: 'right', fontSize: 16}}>
+            습도:{' '}
+            <Text style={styles.textBold}>{currentWeather.humidity}%</Text>,
+            풍속:{' '}
+            <Text style={styles.textBold}>{currentWeather.windSpeed}m/s</Text>
           </Text>
         </View>
       </View>
@@ -89,5 +103,9 @@ const styles = StyleSheet.create({
     alignContent: 'center',
     paddingHorizontal: 5,
     padding: 15,
+  },
+  textBold: {
+    color: 'black',
+    fontWeight: 'bold',
   },
 });
