@@ -11,7 +11,7 @@ interface WeatherStore {
   ) => void;
   changeCurWeather: (newWeather: CurWeather) => void;
   setWeathers: (newWeathers: Weathers) => void;
-  changeWeathers: (date: string, time: string, value: Weather) => void;
+  changeWeathers: (date: string, value: Weather) => void;
   setSunRiseSet: (newRiseSet: [string, string]) => void;
 }
 
@@ -31,14 +31,23 @@ export const useWeatherStore = create<WeatherStore>(set => ({
   setWeathers(newWeathers) {
     set(state => ({...state, weathers: newWeathers}));
   },
-  changeWeathers(date, time, value) {
-    set(state => ({
-      ...state,
-      weathers: {
-        ...state.weathers,
-        [date]: {...state.weathers[date], [time]: value},
-      },
-    }));
+  changeWeathers(date, value) {
+    set(state => {
+      const {time} = value;
+      const days = state.weathers[date];
+      const target = days.find(item => item.time === time);
+      if (!target) {
+        return state;
+      }
+
+      return {
+        ...state,
+        weathers: {
+          ...state.weathers,
+          [date]: days.map(w => (w.time === time ? value : w)),
+        },
+      };
+    });
   },
   setSunRiseSet(newRiseSet) {
     set(state => ({...state, sunRiseSet: newRiseSet}));

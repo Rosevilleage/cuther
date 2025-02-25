@@ -1,5 +1,6 @@
 export class Weather {
   constructor(
+    public time: string, // 시간
     public temperature: number, // 기온
     public condition: number, // 날씨 상태
     public perceivedTemperature: number, // 체감기온
@@ -27,7 +28,7 @@ export class CurWeather {
   ) {}
 }
 
-export type Weathers = {[day: string]: {[time: string]: Weather}};
+export type Weathers = {[day: string]: Weather[]};
 
 export class WeatherReport {
   constructor(

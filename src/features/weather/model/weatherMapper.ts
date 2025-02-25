@@ -48,65 +48,55 @@ export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
   let result: Weathers = {};
   weathersDTO.forEach(({category, fcstDate, fcstTime, fcstValue}) => {
     if (!result[fcstDate]) {
-      result[fcstDate] = {};
+      result[fcstDate] = [];
     }
-    if (!result[fcstDate][fcstTime]) {
-      result[fcstDate][fcstTime] = new Weather(
-        0,
-        1,
-        0,
-        0,
-        0,
-        '',
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
+    const weather = result[fcstDate].find(item => item.time === fcstTime);
+    if (!weather) {
+      result[fcstDate].push(
+        new Weather(fcstTime, 0, 1, 0, 0, 0, '', 0, 0, 0, 0, 0, 0),
+      );
+    } else {
+      switch (category) {
+        case 'POP':
+          weather.rainPercent = +fcstValue;
+          break;
+        case 'PTY':
+          weather.rain = +fcstValue;
+          break;
+        case 'PCP':
+          weather.rainWeight = +fcstValue;
+          break;
+        case 'REH':
+          weather.humidity = +fcstValue;
+          break;
+        case 'SNO':
+          weather.snowWeitgh = +fcstValue;
+          break;
+        case 'TMP':
+          weather.temperature = +fcstValue;
+          break;
+        case 'TMN':
+          weather.min = +fcstValue;
+          break;
+        case 'TMX':
+          weather.max = +fcstValue;
+          break;
+        case 'VEC':
+          weather.windDirection = fcstValue;
+          break;
+        case 'WSD':
+          weather.windSpeed = +fcstValue;
+          break;
+        case 'SKY':
+          weather.condition = +fcstValue;
+          break;
+      }
+      weather.perceivedTemperature = calculatePerceivedTemperature(
+        weather.temperature,
+        weather.windSpeed,
+        weather.humidity,
       );
     }
-    const weather = result[fcstDate][fcstTime];
-    switch (category) {
-      case 'POP':
-        weather.rainPercent = +fcstValue;
-        break;
-      case 'PTY':
-        weather.rain = +fcstValue;
-        break;
-      case 'PCP':
-        weather.rainWeight = +fcstValue;
-        break;
-      case 'REH':
-        weather.humidity = +fcstValue;
-        break;
-      case 'SNO':
-        weather.snowWeitgh = +fcstValue;
-        break;
-      case 'TMP':
-        weather.temperature = +fcstValue;
-        break;
-      case 'TMN':
-        weather.min = +fcstValue;
-        break;
-      case 'TMX':
-        weather.max = +fcstValue;
-        break;
-      case 'VEC':
-        weather.windDirection = fcstValue;
-        break;
-      case 'WSD':
-        weather.windSpeed = +fcstValue;
-        break;
-      case 'SKY':
-        weather.condition = +fcstValue;
-        break;
-    }
-    weather.perceivedTemperature = calculatePerceivedTemperature(
-      weather.temperature,
-      weather.windSpeed,
-      weather.humidity,
-    );
   });
   return result;
 }
