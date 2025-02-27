@@ -99,35 +99,35 @@ function WeatherStack({
         {/* horizontal scroll */}
       </View>
       {isOpen && (
-        <ScrollView
-          horizontal
+        <View
           style={{
             paddingVertical: 10,
             paddingHorizontal: 10,
             marginTop: 5,
             backgroundColor: '#f6f6f6',
-          }}
-          contentContainerStyle={{gap: 30}}>
-          {hourlyWeathers.map(weather => (
-            <View
-              key={`${day}${weather.time}`}
-              style={{gap: 10, alignItems: 'center'}}>
-              <Text style={styles.scrollItemText}>
-                {weather.time.substring(0, 2)}시
-              </Text>
-              <WeatherConditionRenderer
-                condition={weather.condition}
-                rain={weather.rain}
-                light={+weather.time >= +sunRise && +weather.time < +sunSet}
-                size={25}
-              />
-              <Text style={styles.scrollItemText}>
-                {weather.temperature}
-                {CELSIUS}
-              </Text>
-            </View>
-          ))}
-        </ScrollView>
+          }}>
+          <ScrollView horizontal contentContainerStyle={{gap: 30}}>
+            {hourlyWeathers.map(weather => (
+              <View
+                key={`${day}${weather.time}`}
+                style={{gap: 10, alignItems: 'center'}}>
+                <Text style={styles.scrollItemText}>
+                  {weather.time.substring(0, 2)}시
+                </Text>
+                <WeatherConditionRenderer
+                  condition={weather.condition}
+                  rain={weather.rain}
+                  light={+weather.time >= +sunRise && +weather.time < +sunSet}
+                  size={25}
+                />
+                <Text style={styles.scrollItemText}>
+                  {weather.temperature}
+                  {CELSIUS}
+                </Text>
+              </View>
+            ))}
+          </ScrollView>
+        </View>
       )}
     </View>
   );
