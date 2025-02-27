@@ -1,5 +1,6 @@
 import dayjs from 'dayjs';
 import {BaseDate, BaseTime} from '../model/weatherDTO';
+import {Weather} from '../../../entitites/Weather';
 
 const baseTimes = [
   '0200',
@@ -124,4 +125,25 @@ export function genWeatherStatus(condition: number, rain: number) {
     return 'littleCloud';
   }
   return 'cloud';
+}
+
+export function mostFrequentConditionRain(weathers: Weather[]) {
+  const conditionCount: Record<number, number> = {1: 0, 3: 0, 4: 0};
+  const rainCount: Record<number, number> = {};
+
+  for (const item of weathers) {
+    conditionCount[item.condition]++;
+    rainCount[item.rain] = (rainCount[item.rain] || 0) + 1;
+  }
+
+  const mostFrequent = (countMap: Record<number, number>) =>
+    Object.entries(countMap).reduce(
+      (a, b) => (b[1] > countMap[a] ? +b[0] : a),
+      +Object.keys(countMap)[0],
+    );
+
+  return {
+    condition: mostFrequent(conditionCount),
+    rain: mostFrequent(rainCount),
+  };
 }
