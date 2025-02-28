@@ -33,6 +33,9 @@ import {
   vilageFcstDTOToWeathers,
 } from './src/features/weather/model/weatherMapper';
 import {useWeatherStore} from './src/features/weather/model/weatherStore';
+import {getSpecialReports} from './src/features/\bspecialReport/api/specialReportApi';
+import {getStnId} from './src/features/\bspecialReport/lib/specialUtil';
+import {Place} from './src/entitites/place';
 
 enableScreens(false);
 
@@ -48,7 +51,7 @@ function App(): React.JSX.Element {
   }, []);
   const {changeCurWeather, setCurWeather, setWeathers, setSunRiseSet} =
     useWeatherStore(state => state);
-  const setPlace = usePlaceStore(state => state.setPlace);
+  const {setPlace} = usePlaceStore();
   useEffect(() => {
     Geolocation.getCurrentPosition(async position => {
       try {
@@ -64,7 +67,7 @@ function App(): React.JSX.Element {
             latitude,
             longitude,
           ).then(res => res.data.response);
-          // console.log(riseSetData);
+
           if (riseSetData.header.resultCode === '00') {
             const data = riseSetData.body.items.item;
             setSunRiseSet([data.sunrise.trim(), data.sunset.trim()]);
@@ -75,7 +78,7 @@ function App(): React.JSX.Element {
             nx,
             ny,
           };
-          // console.log(params);
+
           const ncstData = await getNcstWeather(params).then(res => {
             return res.data.response;
           });
@@ -110,9 +113,27 @@ function App(): React.JSX.Element {
           const placeData = await getPlaceName(latitude, longitude).then(
             res => res.data,
           );
+          let region: Place | undefined;
 
           if (placeData.status.code === 0) {
-            setPlace(placeDTOToEntity(placeData));
+            const formattedPlace = placeDTOToEntity(placeData);
+            setPlace(formattedPlace);
+            region = formattedPlace;
+          }
+
+          if (region) {
+            const stnId = getStnId(region.topRegion);
+
+            if (stnId) {
+              const specialReport = await getSpecialReports(stnId).then(res => {
+                console.log(res.data);
+                return res.data;
+              });
+
+              if (specialReport.response.header.resultCode === '00') {
+                console.log(specialReport.response.body);
+              }
+            }
           }
         }
       } catch (error) {
