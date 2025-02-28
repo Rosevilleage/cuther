@@ -1,13 +1,17 @@
-import React, {useState} from 'react';
+import React, {useEffect, useState} from 'react';
 import {Weather, Weathers} from '../entitites/Weather';
 
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
 import {useWeatherStore} from '../features/weather/model/weatherStore';
 import dayjs from 'dayjs';
-import {ScrollView} from 'react-native-gesture-handler';
 import {mostFrequentConditionRain} from '../features/weather/lib/weatherUtil';
-
+import Arrow from './../assets/icons/svg/arrow.svg';
+import Animated, {
+  useAnimatedStyle,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 const CELSIUS = '℃';
 
 export default function WeatherList({
@@ -30,6 +34,7 @@ export default function WeatherList({
             onToggle={() => setOpenItemId(index)}
           />
         )}
+        scrollEnabled={false}
       />
     </View>
   );
@@ -53,6 +58,19 @@ function WeatherStack({
 
   const {condition, rain} = mostFrequentConditionRain(hourlyWeathers);
 
+  const animationHeight = useSharedValue(0);
+  const ToggleExpand = () => {
+    onToggle();
+  };
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    height: animationHeight.value,
+  }));
+
+  useEffect(() => {
+    animationHeight.value = isOpen ? withTiming(112) : withTiming(0);
+  }, [animationHeight, isOpen]);
+
   return (
     <View style={styles.itemContainer}>
       <View style={{flexDirection: 'row', gap: 10}}>
@@ -72,7 +90,7 @@ function WeatherStack({
               condition={condition}
               rain={rain}
               light={nowTime >= sunRise && nowTime < sunSet}
-              size={20}
+              size={35}
             />
           </View>
           {/* min max */}
@@ -93,12 +111,20 @@ function WeatherStack({
             </Text>
           </View>
         </View>
-        <TouchableOpacity onPress={onToggle}>
-          <Text style={styles.toggleButtonText}>{isOpen ? '▲' : '▼'}</Text>
+        <TouchableOpacity
+          onPress={ToggleExpand}
+          style={{justifyContent: 'center'}}>
+          <Arrow
+            style={{
+              transform: [{rotate: isOpen ? '180deg' : '0deg'}],
+              marginTop: -15,
+            }}
+          />
         </TouchableOpacity>
         {/* horizontal scroll */}
       </View>
-      {isOpen && (
+      {/* {isOpen && ( */}
+      <Animated.View style={[animatedStyle, {overflow: 'hidden'}]}>
         <View
           style={{
             paddingVertical: 10,
@@ -106,8 +132,11 @@ function WeatherStack({
             marginTop: 5,
             backgroundColor: '#f6f6f6',
           }}>
-          <ScrollView horizontal contentContainerStyle={{gap: 30}}>
-            {hourlyWeathers.map(weather => (
+          <FlatList
+            data={hourlyWeathers}
+            horizontal
+            contentContainerStyle={{gap: 30}}
+            renderItem={({item: weather}) => (
               <View
                 key={`${day}${weather.time}`}
                 style={{gap: 10, alignItems: 'center'}}>
@@ -125,10 +154,12 @@ function WeatherStack({
                   {CELSIUS}
                 </Text>
               </View>
-            ))}
-          </ScrollView>
+            )}
+            showsHorizontalScrollIndicator={false}
+          />
         </View>
-      )}
+        {/* )} */}
+      </Animated.View>
     </View>
   );
 }
