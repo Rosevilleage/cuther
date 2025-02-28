@@ -9,12 +9,9 @@ const reGeoFetcher = axios.create({
   },
 });
 reGeoFetcher.interceptors.request.use(req => {
-  console.log('geoReq :', req);
-
   return req;
 });
 reGeoFetcher.interceptors.response.use(res => {
-  console.log('geoRes :', res.status);
   return res;
 });
 

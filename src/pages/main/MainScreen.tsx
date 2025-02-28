@@ -23,7 +23,3 @@ export default function MainScreen() {
     </ScrollView>
   );
 }
-
-// const styles = StyleSheet.create({
-//   container: {},
-// });
