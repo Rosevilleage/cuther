@@ -6,6 +6,11 @@ const weatherFetcher = axios.create({
   timeout: 10000,
 });
 
+const midWeatherFetcher = axios.create({
+  baseURL: process.env.MID_WEATHER_URL as string,
+  timeout: 10000,
+});
+
 weatherFetcher.interceptors.request.use(req => {
   // console.log('wetherReq :', req);
   return req;
@@ -50,7 +55,7 @@ export function getFcstWeather<T>(
 ) {
   const params = {
     serviceKey: process.env.API_KEY as string,
-    numOfRows: 1000,
+    numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
     base_date,
@@ -59,4 +64,17 @@ export function getFcstWeather<T>(
     ny,
   };
   return weatherFetcher.get<WeatherDTO<T>>(url, {params});
+}
+
+export function getMidWeather(regId: string, tmFc: string) {
+  const url = '/getMidLandFcst';
+  const params = {
+    serviceKey: process.env.API_KEY as string,
+    numOfRows: 1000,
+    pageNo: 1,
+    dataType: 'JSON',
+    regId,
+    tmFc,
+  };
+  return midWeatherFetcher.get(url, {params});
 }

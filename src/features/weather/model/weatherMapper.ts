@@ -91,12 +91,16 @@ export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
           weather.condition = +fcstValue;
           break;
       }
+    }
+  });
+  Object.values(result).forEach(weathers => {
+    weathers.forEach(weather => {
       weather.perceivedTemperature = calculatePerceivedTemperature(
         weather.temperature,
         weather.windSpeed,
         weather.humidity,
       );
-    }
+    });
   });
   return result;
 }

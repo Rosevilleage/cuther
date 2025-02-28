@@ -28,6 +28,16 @@ export class CurWeather {
   ) {}
 }
 
+export class MidWeathers {
+  constructor(
+    public date: string,
+    public morningCondition: number,
+    public afternoonCondition: number,
+    public min: number,
+    public max: number,
+  ) {}
+}
+
 export type Weathers = {[day: string]: Weather[]};
 
 export class WeatherReport {
