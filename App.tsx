@@ -37,9 +37,17 @@ import {
   vilageFcstDTOToWeathers,
 } from './src/features/weather/model/weatherMapper';
 import {useWeatherStore} from './src/features/weather/model/weatherStore';
-import {getSpecialReports} from './src/features/\bspecialReport/api/specialReportApi';
+import {
+  getPreReports,
+  getSpecialReports,
+} from './src/features/\bspecialReport/api/specialReportApi';
 import {getStnId} from './src/features/\bspecialReport/lib/specialUtil';
 import {Place} from './src/entitites/place';
+import {
+  preReportDTOToEntity,
+  specialReportDTOToEntity,
+} from './src/features/\bspecialReport/model/specialReportMapper';
+import {useSpecialReport} from './src/features/\bspecialReport/model/specialReportStore';
 
 enableScreens(false);
 
@@ -60,11 +68,12 @@ function App(): React.JSX.Element {
     setSunRiseSet,
   } = useWeatherStore(state => state);
   const {setPlace} = usePlaceStore();
+  const {setPreReports, setSpecialReports} = useSpecialReport();
   useEffect(() => {
     Geolocation.getCurrentPosition(async position => {
       try {
         const {latitude, longitude} = position.coords;
-        console.log(latitude, longitude);
+        // console.log(latitude, longitude);
         if (latitude && longitude) {
           const {nx, ny} = dfsXYConv('toXY', latitude, longitude);
           const base_date = dayjs().format('YYYYMMDD') as BaseDate;
@@ -95,9 +104,8 @@ function App(): React.JSX.Element {
               ncstData.body.items.item,
             );
             changeCurWeather(newCurWeather);
-            // console.log(newCurWeather);
           }
-          // console.log(ncstData);
+
           const vilageDate = roundToNearestBaseTime(base_date, base_time);
           const vilageParams = {
             base_date: vilageDate.baseDate,
@@ -115,8 +123,6 @@ function App(): React.JSX.Element {
               vilageData.body.items.item,
             );
             setWeathers(newWeathers);
-
-            // console.log(newWeathers);
           }
           const placeData = await getPlaceName(latitude, longitude).then(
             res => res.data,
@@ -134,30 +140,52 @@ function App(): React.JSX.Element {
 
             if (stnId) {
               const specialReport = await getSpecialReports(stnId).then(res => {
-                console.log(res.data);
                 return res.data;
               });
 
               if (specialReport.response.header.resultCode === '00') {
-                console.log(specialReport.response.body);
+                const specialReportEntity = specialReportDTOToEntity(
+                  specialReport.response.body,
+                );
+
+                setSpecialReports(specialReportEntity);
+              }
+
+              const preReports = await getPreReports(stnId).then(res => {
+                return res.data;
+              });
+
+              if (preReports.response.header.resultCode === '00') {
+                const preReportEntity = preReportDTOToEntity(
+                  preReports.response.body,
+                );
+                setPreReports(preReportEntity);
               }
             }
 
-            const regId = getMidWeatherRegId(region);
-            if (regId) {
-              const midWeatherData = await getMidWeather(
-                regId,
-                `${base_date}${+base_time <= 1800 ? '0600' : '1800'}`,
-              );
-              console.log(midWeatherData);
-            }
+            // const regId = getMidWeatherRegId(region);
+            // if (regId) {
+            //   const midWeatherData = await getMidWeather(
+            //     regId,
+            //     `${base_date}${+base_time <= 1800 ? '0600' : '1800'}`,
+            //   );
+            //   console.log(midWeatherData);
+            // }
           }
         }
       } catch (error) {
         console.log(error);
       }
     });
-  }, [changeCurWeather, setCurWeather, setPlace, setSunRiseSet, setWeathers]);
+  }, [
+    changeCurWeather,
+    setCurWeather,
+    setPlace,
+    setPreReports,
+    setSpecialReports,
+    setSunRiseSet,
+    setWeathers,
+  ]);
   return (
     <SafeAreaProvider>
       <Navigation />

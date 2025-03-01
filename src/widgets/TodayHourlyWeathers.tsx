@@ -28,7 +28,6 @@ function TodayHourlyWeathers({
       style={{
         flex: 1,
         backgroundColor: '#fff',
-        marginTop: 15,
         paddingInline: 20,
         paddingBlock: 10,
         borderRadius: 15,
