@@ -19,9 +19,13 @@ import {getSunRiseSet} from './src/features/weather/api/riseApi';
 import {
   getNcstWeather,
   getFcstWeather,
+  getMidWeather,
 } from './src/features/weather/api/WeatherApi';
 import {dfsXYConv} from './src/features/weather/lib/latlonGridConverter';
-import {roundToNearestBaseTime} from './src/features/weather/lib/weatherUtil';
+import {
+  getMidWeatherRegId,
+  roundToNearestBaseTime,
+} from './src/features/weather/lib/weatherUtil';
 import {
   BaseDate,
   BaseTime,
@@ -49,8 +53,12 @@ function App(): React.JSX.Element {
       );
     }
   }, []);
-  const {changeCurWeather, setCurWeather, setWeathers, setSunRiseSet} =
-    useWeatherStore(state => state);
+  const {
+    changeCurWeather,
+    setCurWeather,
+    setDailyWeathers: setWeathers,
+    setSunRiseSet,
+  } = useWeatherStore(state => state);
   const {setPlace} = usePlaceStore();
   useEffect(() => {
     Geolocation.getCurrentPosition(async position => {
@@ -133,6 +141,15 @@ function App(): React.JSX.Element {
               if (specialReport.response.header.resultCode === '00') {
                 console.log(specialReport.response.body);
               }
+            }
+
+            const regId = getMidWeatherRegId(region);
+            if (regId) {
+              const midWeatherData = await getMidWeather(
+                regId,
+                `${base_date}${+base_time <= 1800 ? '0600' : '1800'}`,
+              );
+              console.log(midWeatherData);
             }
           }
         }
