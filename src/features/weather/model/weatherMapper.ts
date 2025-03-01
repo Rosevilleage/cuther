@@ -1,4 +1,4 @@
-import {CurWeather, Weather, Weathers} from '../../../entitites/Weather';
+import {CurWeather, Weather, DailyWeathers} from '../../../entitites/Weather';
 import {calculatePerceivedTemperature} from '../lib/weatherUtil';
 import {UltraNcstItem, VilageFcstItem} from './weatherDTO';
 
@@ -45,15 +45,18 @@ export function ncstDTOToCurrentWeather(
 }
 
 export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
-  let result: Weathers = {};
+  console.log(weathersDTO);
+  let result: DailyWeathers = {};
   weathersDTO.forEach(({category, fcstDate, fcstTime, fcstValue}) => {
     if (!result[fcstDate]) {
-      result[fcstDate] = [];
+      result[fcstDate] = {min: undefined, max: undefined, weathers: []};
     }
-    const weather = result[fcstDate].find(item => item.time === fcstTime);
+    const weather = result[fcstDate].weathers.find(
+      item => item.time === fcstTime,
+    );
     if (!weather) {
-      result[fcstDate].push(
-        new Weather(fcstTime, 0, 1, 0, 0, 0, '', 0, 0, 0, 0, 0, 0),
+      result[fcstDate].weathers.push(
+        new Weather(fcstTime, 0, 1, 0, '', 0, 0, 0, 0, 0, 0),
       );
     } else {
       switch (category) {
@@ -76,10 +79,10 @@ export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
           weather.temperature = +fcstValue;
           break;
         case 'TMN':
-          weather.min = +fcstValue;
+          result[fcstDate].min = +fcstValue;
           break;
         case 'TMX':
-          weather.max = +fcstValue;
+          result[fcstDate].max = +fcstValue;
           break;
         case 'VEC':
           weather.windDirection = fcstValue;
@@ -93,7 +96,7 @@ export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
       }
     }
   });
-  Object.values(result).forEach(weathers => {
+  Object.values(result).forEach(({weathers}) => {
     weathers.forEach(weather => {
       weather.perceivedTemperature = calculatePerceivedTemperature(
         weather.temperature,

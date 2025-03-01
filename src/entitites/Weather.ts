@@ -4,8 +4,6 @@ export class Weather {
     public temperature: number, // 기온
     public condition: number, // 날씨 상태
     public perceivedTemperature: number, // 체감기온
-    public min: number, // 1일 최저 기온
-    public max: number, // 1일 최대 기온
     public windDirection: string, // 풍향
     public windSpeed: number, // 풍속
     public rainWeight: number, // 강수량
@@ -38,12 +36,18 @@ export class MidWeathers {
   ) {}
 }
 
-export type Weathers = {[day: string]: Weather[]};
+export type DailyWeathers = {
+  [day: string]: {
+    min: number | undefined;
+    max: number | undefined;
+    weathers: Weather[];
+  };
+};
 
 export class WeatherReport {
   constructor(
     public currentWeather: CurWeather,
-    public hourlyWeather: Weathers,
+    public dailyWeathers: DailyWeathers,
   ) {}
 }
 

@@ -1,23 +1,23 @@
 import {create} from 'zustand';
-import {CurWeather, Weather, Weathers} from '../../../entitites/Weather';
+import {CurWeather, Weather, DailyWeathers} from '../../../entitites/Weather';
 
 interface WeatherStore {
   currentWeather: CurWeather;
-  weathers: Weathers;
+  dailyWeathers: DailyWeathers;
   sunRiseSet: [string, string];
   setCurWeather: <T extends keyof CurWeather>(
     key: T,
     value: CurWeather[T],
   ) => void;
   changeCurWeather: (newWeather: CurWeather) => void;
-  setWeathers: (newWeathers: Weathers) => void;
-  changeWeathers: (date: string, value: Weather) => void;
+  setDailyWeathers: (newWeathers: DailyWeathers) => void;
+  changeDailyWeathers: (date: string, value: Weather) => void;
   setSunRiseSet: (newRiseSet: [string, string]) => void;
 }
 
 export const useWeatherStore = create<WeatherStore>(set => ({
   currentWeather: new CurWeather(0, 0, 0, 0, 0, '', 0),
-  weathers: {},
+  dailyWeathers: {},
   sunRiseSet: ['', ''],
   setCurWeather(key, value) {
     set(state => ({
@@ -28,13 +28,13 @@ export const useWeatherStore = create<WeatherStore>(set => ({
   changeCurWeather(newWeather) {
     set(state => ({...state, currentWeather: newWeather}));
   },
-  setWeathers(newWeathers) {
-    set(state => ({...state, weathers: newWeathers}));
+  setDailyWeathers(newWeathers) {
+    set(state => ({...state, dailyWeathers: newWeathers}));
   },
-  changeWeathers(date, value) {
+  changeDailyWeathers(date, value) {
     set(state => {
       const {time} = value;
-      const days = state.weathers[date];
+      const days = state.dailyWeathers[date].weathers;
       const target = days.find(item => item.time === time);
       if (!target) {
         return state;
@@ -42,9 +42,12 @@ export const useWeatherStore = create<WeatherStore>(set => ({
 
       return {
         ...state,
-        weathers: {
-          ...state.weathers,
-          [date]: days.map(w => (w.time === time ? value : w)),
+        dailyWeathers: {
+          ...state.dailyWeathers,
+          [date]: {
+            ...state.dailyWeathers[date],
+            weathers: days.map(w => (w.time === time ? value : w)),
+          },
         },
       };
     });
