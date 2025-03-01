@@ -45,7 +45,6 @@ export function ncstDTOToCurrentWeather(
 }
 
 export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
-  console.log(weathersDTO);
   let result: DailyWeathers = {};
   weathersDTO.forEach(({category, fcstDate, fcstTime, fcstValue}) => {
     if (!result[fcstDate]) {
