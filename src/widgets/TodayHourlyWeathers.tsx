@@ -16,7 +16,13 @@ function TodayHourlyWeathers({
     return null;
   }
   const [day, {weathers: hourlyWeathers}] = weatherInfo[0];
-
+  const totalWeathers =
+    hourlyWeathers.length < 24
+      ? [
+          ...hourlyWeathers,
+          ...weatherInfo[1][1].weathers.slice(0, 24 - hourlyWeathers.length),
+        ]
+      : hourlyWeathers;
   return (
     <View
       style={{
@@ -30,7 +36,7 @@ function TodayHourlyWeathers({
       }}>
       <Text style={{textAlign: 'center', fontSize: 23}}>시간별 날씨</Text>
       <RowHourlyWeathersView
-        hourlyWeathers={hourlyWeathers}
+        hourlyWeathers={totalWeathers}
         sunRiseSet={sunRiseSet}
         day={day}
       />
