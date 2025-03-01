@@ -1,5 +1,5 @@
 import React, {useEffect, useState} from 'react';
-import {Weather, Weathers} from '../entitites/Weather';
+import {DailyWeathers} from '../entitites/Weather';
 
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
@@ -12,12 +12,13 @@ import Animated, {
   useSharedValue,
   withTiming,
 } from 'react-native-reanimated';
+import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
 const CELSIUS = '℃';
 
 export default function WeatherList({
   weathers,
 }: {
-  weathers: Weathers;
+  weathers: DailyWeathers;
   sunRiseSet: [string, string];
 }) {
   const [openItemId, setOpenItemId] = useState<number | null>(null);
@@ -25,10 +26,10 @@ export default function WeatherList({
   return (
     <View style={styles.container}>
       <FlatList
-        data={Object.entries(weathers)}
+        data={Object.entries(weathers).slice(1)}
         renderItem={({item, index}) => (
           <WeatherStack
-            hourlyWeathers={item[1]}
+            dailyWeathers={item[1]}
             day={item[0]}
             isOpen={openItemId === index}
             onToggle={() => setOpenItemId(index)}
@@ -41,22 +42,23 @@ export default function WeatherList({
 }
 
 function WeatherStack({
-  hourlyWeathers,
+  dailyWeathers,
   day,
   isOpen,
   onToggle,
 }: {
-  hourlyWeathers: Weather[];
+  dailyWeathers: DailyWeathers[keyof DailyWeathers];
   day: string;
   isOpen: boolean;
   onToggle: () => void;
 }) {
-  const [sunRise, sunSet] = useWeatherStore(state => state.sunRiseSet);
+  const sunRiseSet = useWeatherStore(state => state.sunRiseSet);
+  const [sunRise, sunSet] = sunRiseSet;
   const mm = day.substring(4, 6),
     dd = day.substring(6);
   const nowTime = dayjs().format('HHmm');
 
-  const {condition, rain} = mostFrequentConditionRain(hourlyWeathers);
+  const {condition, rain} = mostFrequentConditionRain(dailyWeathers.weathers);
 
   const animationHeight = useSharedValue(0);
   const ToggleExpand = () => {
@@ -68,7 +70,7 @@ function WeatherStack({
   }));
 
   useEffect(() => {
-    animationHeight.value = isOpen ? withTiming(112) : withTiming(0);
+    animationHeight.value = isOpen ? withTiming(130) : withTiming(0);
   }, [animationHeight, isOpen]);
 
   return (
@@ -101,12 +103,12 @@ function WeatherStack({
               gap: 5,
             }}>
             <Text>
-              {hourlyWeathers[0].min}
+              {dailyWeathers.min}
               {CELSIUS}
             </Text>
             <Text>|</Text>
             <Text>
-              {hourlyWeathers[0].max}
+              {dailyWeathers.max}
               {CELSIUS}
             </Text>
           </View>
@@ -130,32 +132,12 @@ function WeatherStack({
             paddingVertical: 10,
             paddingHorizontal: 10,
             marginTop: 5,
-            backgroundColor: '#f6f6f6',
+            backgroundColor: '#ffffff',
           }}>
-          <FlatList
-            data={hourlyWeathers}
-            horizontal
-            contentContainerStyle={{gap: 30}}
-            renderItem={({item: weather}) => (
-              <View
-                key={`${day}${weather.time}`}
-                style={{gap: 10, alignItems: 'center'}}>
-                <Text style={styles.scrollItemText}>
-                  {weather.time.substring(0, 2)}시
-                </Text>
-                <WeatherConditionRenderer
-                  condition={weather.condition}
-                  rain={weather.rain}
-                  light={+weather.time >= +sunRise && +weather.time < +sunSet}
-                  size={25}
-                />
-                <Text style={styles.scrollItemText}>
-                  {weather.temperature}
-                  {CELSIUS}
-                </Text>
-              </View>
-            )}
-            showsHorizontalScrollIndicator={false}
+          <RowHourlyWeathersView
+            hourlyWeathers={dailyWeathers.weathers}
+            sunRiseSet={sunRiseSet}
+            day={day}
           />
         </View>
         {/* )} */}
@@ -170,6 +152,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#fff',
     marginTop: 15,
     paddingHorizontal: 15,
+    borderRadius: 15,
   },
   itemContainer: {
     padding: 15,
@@ -177,6 +160,7 @@ const styles = StyleSheet.create({
     paddingBottom: 0,
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
+    borderRadius: 15,
   },
   toggleButton: {
     alignSelf: 'flex-end',
