@@ -41,6 +41,7 @@ export default function CurrentDisplay({
               flexDirection: 'row',
               alignItems: 'center',
               justifyContent: 'center',
+              gap: 5,
             },
           ]}>
           <WeatherConditionRenderer
@@ -49,7 +50,7 @@ export default function CurrentDisplay({
             light={+base_time >= +sunRise && +base_time <= +sunSet}
             size={60}
           />
-          <View style={{flex: 1, justifyContent: 'center', marginLeft: 15}}>
+          <View style={{flex: 1, justifyContent: 'center'}}>
             <Text
               style={{
                 height: '100%',
@@ -59,7 +60,7 @@ export default function CurrentDisplay({
             </Text>
           </View>
         </View>
-        <View style={{flex: 1, paddingRight: 10, gap: 5}}>
+        <View style={{flex: 1, gap: 5}}>
           <Text style={{textAlign: 'right', fontSize: 20}}>
             {place.topRegion}
             <Text style={{textAlign: 'right', fontSize: 16}}>
@@ -86,12 +87,12 @@ export default function CurrentDisplay({
 }
 
 const styles = StyleSheet.create({
-  container: {},
   flexOne: {
     flex: 1,
   },
   mainsection: {
     backgroundColor: 'white',
+    borderRadius: 15,
   },
   character: {
     flex: 1,
@@ -101,7 +102,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'center',
     alignContent: 'center',
-    paddingHorizontal: 5,
     padding: 15,
   },
   textBold: {
