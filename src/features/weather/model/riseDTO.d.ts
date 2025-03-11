@@ -18,7 +18,20 @@ interface RiseInfo {
   sunset: string;
   suntransit: number;
 }
-
+export type RiseSetData = {
+  body: {
+    numOfRows: number;
+    pageNo: number;
+    totalCount: number;
+    items: {
+      item: RiseInfo;
+    };
+  };
+  header: {
+    resultCode: string;
+    resultMsg: string;
+  };
+};
 export interface RiseResponse {
   response: {
     body: {
