@@ -18,7 +18,6 @@ import {dfsXYConv} from './src/features/weather/lib/latlonGridConverter';
 import {getPlaceName} from './src/features/place/api/placeApi';
 import {placeDTOToEntity} from './src/features/place/model/placeMapper';
 import {useGeoLocation} from './src/features/geoLocation/model/geoLocationStore';
-import {getStnId} from './src/features/\bspecialReport/lib/specialUtil';
 
 enableScreens(false);
 
