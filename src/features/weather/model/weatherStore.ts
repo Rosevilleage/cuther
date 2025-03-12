@@ -1,16 +1,16 @@
 import {create} from 'zustand';
-import {CurWeather, Weather, DailyWeathers} from '../../../entitites/Weather';
+import {CurWeather, Weather, HourlyWeathers} from '../../../entitites/Weather';
 
 interface WeatherStore {
   currentWeather: CurWeather;
-  dailyWeathers: DailyWeathers;
+  dailyWeathers: HourlyWeathers;
   sunRiseSet: [string, string];
   setCurWeather: <T extends keyof CurWeather>(
     key: T,
     value: CurWeather[T],
   ) => void;
   changeCurWeather: (newWeather: CurWeather) => void;
-  setDailyWeathers: (newWeathers: DailyWeathers) => void;
+  setDailyWeathers: (newWeathers: HourlyWeathers) => void;
   changeDailyWeathers: (date: string, value: Weather) => void;
   setSunRiseSet: (newRiseSet: [string, string]) => void;
 }

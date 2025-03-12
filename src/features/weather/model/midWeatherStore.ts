@@ -1,9 +1,9 @@
 import {create} from 'zustand';
-import {MidWeathers} from '../../../entitites/Weather';
+import {DailyWeathers} from '../../../entitites/Weather';
 
 interface MidWeathersStore {
-  midWeathers: MidWeathers[];
-  setMidWeather: (newMidWeathers: MidWeathers[]) => void;
+  midWeathers: DailyWeathers[];
+  setMidWeather: (newMidWeathers: DailyWeathers[]) => void;
 }
 
 export const useMidWeathers = create<MidWeathersStore>(set => ({

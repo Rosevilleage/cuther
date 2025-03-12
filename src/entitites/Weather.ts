@@ -26,7 +26,7 @@ export class CurWeather {
   ) {}
 }
 
-export class MidWeathers {
+export class DailyWeathers {
   constructor(
     public date: string,
     public morningCondition: number,
@@ -36,7 +36,7 @@ export class MidWeathers {
   ) {}
 }
 
-export type DailyWeathers = {
+export type HourlyWeathers = {
   [day: string]: {
     min: number | undefined;
     max: number | undefined;
@@ -47,7 +47,7 @@ export type DailyWeathers = {
 export class WeatherReport {
   constructor(
     public currentWeather: CurWeather,
-    public dailyWeathers: DailyWeathers,
+    public dailyWeathers: HourlyWeathers,
   ) {}
 }
 

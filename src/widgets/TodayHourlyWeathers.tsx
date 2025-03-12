@@ -1,13 +1,13 @@
 import React from 'react';
 import {Text, View} from 'react-native';
 import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
-import {DailyWeathers} from '../entitites/Weather';
+import {HourlyWeathers} from '../entitites/Weather';
 
 function TodayHourlyWeathers({
   weathers,
   sunRiseSet,
 }: {
-  weathers: DailyWeathers;
+  weathers: HourlyWeathers;
   sunRiseSet: [string, string];
 }) {
   const weatherInfo = Object.entries(weathers);

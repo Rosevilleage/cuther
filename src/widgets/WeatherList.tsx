@@ -1,9 +1,9 @@
 import React, {useEffect, useState} from 'react';
-import {DailyWeathers} from '../entitites/Weather';
+import {HourlyWeathers} from '../entitites/Weather';
 
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
-import {useWeatherStore} from '../features/weather/model/weatherStore';
+
 import dayjs from 'dayjs';
 import {mostFrequentConditionRain} from '../features/weather/lib/weatherUtil';
 import Arrow from './../assets/icons/svg/arrow.svg';
@@ -16,9 +16,11 @@ import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView'
 const CELSIUS = '℃';
 
 export default function WeatherList({
-  weathers,
+  hourlyWeathers,
+  sunRiseSet,
 }: {
-  weathers: DailyWeathers;
+  hourlyWeathers: HourlyWeathers;
+
   sunRiseSet: [string, string];
 }) {
   const [openItemId, setOpenItemId] = useState<number | null>(null);
@@ -26,10 +28,11 @@ export default function WeatherList({
   return (
     <View style={styles.container}>
       <FlatList
-        data={Object.entries(weathers).slice(1)}
+        data={Object.entries(hourlyWeathers).slice(1)}
         renderItem={({item, index}) => (
           <WeatherStack
-            dailyWeathers={item[1]}
+            hourlyWeathers={item[1]}
+            sunRiseSet={sunRiseSet}
             day={item[0]}
             isOpen={openItemId === index}
             onToggle={() => setOpenItemId(index)}
@@ -42,17 +45,18 @@ export default function WeatherList({
 }
 
 function WeatherStack({
-  dailyWeathers,
+  hourlyWeathers: dailyWeathers,
   day,
   isOpen,
   onToggle,
+  sunRiseSet,
 }: {
-  dailyWeathers: DailyWeathers[keyof DailyWeathers];
+  hourlyWeathers: HourlyWeathers[keyof HourlyWeathers];
   day: string;
   isOpen: boolean;
+  sunRiseSet: [string, string];
   onToggle: () => void;
 }) {
-  const sunRiseSet = useWeatherStore(state => state.sunRiseSet);
   const [sunRise, sunSet] = sunRiseSet;
   const mm = day.substring(4, 6),
     dd = day.substring(6);
@@ -103,12 +107,18 @@ function WeatherStack({
               gap: 5,
             }}>
             <Text>
-              {dailyWeathers.min}
+              {dailyWeathers.min ||
+                Math.min(
+                  ...dailyWeathers.weathers.map(weather => weather.temperature),
+                )}
               {CELSIUS}
             </Text>
             <Text>|</Text>
             <Text>
-              {dailyWeathers.max}
+              {dailyWeathers.max ||
+                Math.max(
+                  ...dailyWeathers.weathers.map(weather => weather.temperature),
+                )}
               {CELSIUS}
             </Text>
           </View>
