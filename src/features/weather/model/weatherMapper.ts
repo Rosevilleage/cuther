@@ -1,4 +1,4 @@
-import {CurWeather, Weather, DailyWeathers} from '../../../entitites/Weather';
+import {CurWeather, Weather, HourlyWeathers} from '../../../entitites/Weather';
 import {calculatePerceivedTemperature} from '../lib/weatherUtil';
 import {UltraNcstItem, VilageFcstItem} from './weatherDTO';
 
@@ -45,56 +45,59 @@ export function ncstDTOToCurrentWeather(
 }
 
 export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
-  let result: DailyWeathers = {};
+  let result: HourlyWeathers = {};
+
   weathersDTO.forEach(({category, fcstDate, fcstTime, fcstValue}) => {
     if (!result[fcstDate]) {
       result[fcstDate] = {min: undefined, max: undefined, weathers: []};
     }
-    const weather = result[fcstDate].weathers.find(
-      item => item.time === fcstTime,
-    );
-    if (!weather) {
+
+    if (!result[fcstDate].weathers.find(item => item.time === fcstTime)) {
       result[fcstDate].weathers.push(
         new Weather(fcstTime, 0, 1, 0, '', 0, 0, 0, 0, 0, 0),
       );
-    } else {
-      switch (category) {
-        case 'POP':
-          weather.rainPercent = +fcstValue;
-          break;
-        case 'PTY':
-          weather.rain = +fcstValue;
-          break;
-        case 'PCP':
-          weather.rainWeight = +fcstValue;
-          break;
-        case 'REH':
-          weather.humidity = +fcstValue;
-          break;
-        case 'SNO':
-          weather.snowWeitgh = +fcstValue;
-          break;
-        case 'TMP':
-          weather.temperature = +fcstValue;
-          break;
-        case 'TMN':
-          result[fcstDate].min = +fcstValue;
-          break;
-        case 'TMX':
-          result[fcstDate].max = +fcstValue;
-          break;
-        case 'VEC':
-          weather.windDirection = fcstValue;
-          break;
-        case 'WSD':
-          weather.windSpeed = +fcstValue;
-          break;
-        case 'SKY':
-          weather.condition = +fcstValue;
-          break;
-      }
+    }
+
+    const targetWeather = result[fcstDate].weathers.find(
+      item => item.time === fcstTime,
+    ) as Weather;
+    switch (category) {
+      case 'POP':
+        targetWeather.rainPercent = +fcstValue;
+        break;
+      case 'PTY':
+        targetWeather.rain = +fcstValue;
+        break;
+      case 'PCP':
+        targetWeather.rainWeight = +fcstValue;
+        break;
+      case 'REH':
+        targetWeather.humidity = +fcstValue;
+        break;
+      case 'SNO':
+        targetWeather.snowWeitgh = +fcstValue;
+        break;
+      case 'TMP':
+        targetWeather.temperature = +fcstValue;
+        break;
+      case 'TMN':
+        result[fcstDate].min = +fcstValue;
+        break;
+      case 'TMX':
+        result[fcstDate].max = +fcstValue;
+        break;
+      case 'VEC':
+        targetWeather.windDirection = fcstValue;
+        break;
+      case 'WSD':
+        targetWeather.windSpeed = +fcstValue;
+        break;
+      case 'SKY':
+        targetWeather.condition = +fcstValue;
+        break;
     }
   });
+
   Object.values(result).forEach(({weathers}) => {
     weathers.forEach(weather => {
       weather.perceivedTemperature = calculatePerceivedTemperature(
@@ -104,5 +107,8 @@ export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
       );
     });
   });
+
+  console.log(result);
+
   return result;
 }
