@@ -108,7 +108,5 @@ export function vilageFcstDTOToWeathers(weathersDTO: VilageFcstItem[]) {
     });
   });
 
-  console.log(result);
-
   return result;
 }
