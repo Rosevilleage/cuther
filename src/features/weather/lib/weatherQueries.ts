@@ -105,6 +105,7 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
       if (data.header.resultCode !== '00') {
         throw new Error(`api error: ${data.header.resultMsg}`);
       }
+
       const result: {
         date: string;
         amCon: string;
@@ -118,9 +119,6 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
         }
         const num = category.match(/\d+/g);
         if (num) {
-          if (+num[0] > 7) {
-            return;
-          }
           const targetDate = date.add(+num[0], 'day').format('YYYYMMDD');
           if (!getTargetItem(result, targetDate)) {
             result.push({date: targetDate, amCon: '', pmCon: ''});
@@ -129,6 +127,10 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
           const [propType, AmPm] = category.split(/\d+/);
           const condition = getMidWeatherStatus(value as MidCondition);
           if (propType === 'wf') {
+            if (+num[0] > 7) {
+              targetWeather.amCon = condition;
+              targetWeather.pmCon = condition;
+            }
             if (AmPm === 'Am') {
               targetWeather.amCon = condition;
             } else {
@@ -155,6 +157,7 @@ export const dailyTemperatureQueryOption = (
       if (data.header.resultCode !== '00') {
         throw new Error(`api error: ${data.header.resultMsg}`);
       }
+
       const result: {
         date: string;
         min: number;
@@ -168,11 +171,7 @@ export const dailyTemperatureQueryOption = (
           return;
         }
         const num = category.match(/\d+/g);
-
         if (num) {
-          if (+num[0] > 7) {
-            return;
-          }
           const targetDate = date.add(+num[0], 'day').format('YYYYMMDD');
           if (!getTargetItem(result, targetDate)) {
             result.push({
