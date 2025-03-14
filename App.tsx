@@ -15,7 +15,7 @@ import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import {dfsXYConv} from './src/features/weather/lib/latlonGridConverter';
 
-import {getPlaceName} from './src/features/place/api/placeApi';
+import {getGeoLocation} from './src/features/geoLocation/api/geoLocationApi';
 import {placeDTOToEntity} from './src/features/place/model/placeMapper';
 import {useGeoLocation} from './src/features/geoLocation/model/geoLocationStore';
 
@@ -48,7 +48,7 @@ function App(): React.JSX.Element {
             const {nx, ny, lat, lng} = dfsXYConv('toXY', latitude, longitude);
             setLatLng(lat, lng);
             setXY(nx, ny);
-            const placeData = await getPlaceName(lat, lng).then(
+            const placeData = await getGeoLocation(lat, lng).then(
               res => res.data,
             );
 

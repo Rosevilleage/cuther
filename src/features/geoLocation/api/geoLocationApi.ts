@@ -15,7 +15,7 @@ reGeoFetcher.interceptors.response.use(res => {
   return res;
 });
 
-export function getPlaceName(x: number, y: number) {
+export function getGeoLocation(x: number, y: number) {
   const params = {
     coords: `${y},${x}`,
     orders: 'legalcode',
