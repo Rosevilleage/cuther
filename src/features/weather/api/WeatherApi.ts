@@ -1,5 +1,10 @@
 import axios from 'axios';
-import {WeatherDTO, WeatherNcstItemDTO} from '../model/weatherDTO';
+import {
+  MidLandFcstDTO,
+  MidTaDTO,
+  WeatherDTO,
+  WeatherNcstItemDTO,
+} from '../model/weatherDTO';
 
 const weatherFetcher = axios.create({
   baseURL: process.env.API_END_POINT as string,
@@ -66,7 +71,7 @@ export function getFcstWeather<T>(
   return weatherFetcher.get<WeatherDTO<T>>(url, {params});
 }
 
-export function getMidWeather(regId: string, tmFc: string) {
+export function getMidConditions(regId: string, tmFc: string) {
   const url = '/getMidLandFcst';
   const params = {
     serviceKey: process.env.API_KEY as string,
@@ -76,5 +81,18 @@ export function getMidWeather(regId: string, tmFc: string) {
     regId,
     tmFc,
   };
-  return midWeatherFetcher.get(url, {params});
+  return midWeatherFetcher.get<MidLandFcstDTO>(url, {params});
+}
+
+export function getMidTemplate(regId: string, tmFc: string) {
+  const url = '/getMidTa';
+  const params = {
+    serviceKey: process.env.API_KEY as string,
+    numOfRows: 1000,
+    pageNo: 1,
+    dataType: 'JSON',
+    regId,
+    tmFc,
+  };
+  return midWeatherFetcher.get<MidTaDTO>(url, {params});
 }
