@@ -1,7 +1,6 @@
 import dayjs from 'dayjs';
 import {BaseDate, BaseTime} from '../model/weatherDTO';
 import {Weather} from '../../../entitites/Weather';
-import {Place} from '../../../entitites/place';
 
 const baseTimes = [
   '0200',
@@ -147,53 +146,4 @@ export function mostFrequentConditionRain(weathers: Weather[]) {
     condition: mostFrequent(conditionCount),
     rain: mostFrequent(rainCount),
   };
-}
-
-const GANG_EAST = [
-  '고성군',
-  '속초시',
-  '양양군',
-  '강릉시',
-  '동해시',
-  '삼척시',
-  '태백시',
-];
-
-export function getMidWeatherRegId(region: Place) {
-  switch (region.topRegion) {
-    case '서울특별시':
-    case '인천광역시':
-    case '경기도':
-      return '11B00000';
-    case '부산광역시':
-    case '울산광역시':
-    case '경상남도':
-      return '11H20000';
-    case '대구광역시':
-    case '경상북도':
-      return '11H10000';
-    case '광주광역시':
-    case '전라남도':
-      return '11F20000';
-    case '전라북도':
-    case '전북특별자치도':
-      return '11F10000';
-    case '대전광역시':
-    case '세종특별자치시':
-    case '세종시':
-    case '충청남도':
-      return '11C20000';
-    case '충청북도':
-      return '11C10000';
-    case '강원특별자치도':
-    case '강원도':
-      if (GANG_EAST.includes(region.middleRegion)) {
-        return '11D20000';
-      }
-      return '11D10000';
-    case '제주특별자치도':
-      return '11G00000';
-    default:
-      return;
-  }
 }
