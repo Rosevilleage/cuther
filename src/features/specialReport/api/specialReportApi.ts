@@ -21,6 +21,7 @@ export function getSpecialReports(stnId: number) {
     toTmFc: nowDay,
     stnId,
   };
+
   return specialReportApi.get<SpecialReportResponse>('getWthrWrnMsg', {
     params,
   });

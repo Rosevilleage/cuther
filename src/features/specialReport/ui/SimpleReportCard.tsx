@@ -6,7 +6,7 @@ function SimpleReportCard({
   reportTitles,
   emptyTitle,
 }: {
-  reportTitles: string[];
+  reportTitles: string[] | 'noReports';
   emptyTitle: string;
 }) {
   return (
@@ -17,7 +17,7 @@ function SimpleReportCard({
         borderRadius: 15,
         height: 150,
       }}>
-      {reportTitles.length > 0 ? (
+      {reportTitles !== 'noReports' ? (
         <Swiper
           autoplay
           showsPagination
