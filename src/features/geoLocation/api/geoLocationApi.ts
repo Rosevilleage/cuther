@@ -21,5 +21,5 @@ export function getGeoLocation(x: number, y: number) {
     orders: 'legalcode',
     output: 'json',
   };
-  return reGeoFetcher.get<PlaceResponse>('', {params});
+  return reGeoFetcher.get<GeoLocationResponse>('', {params});
 }
