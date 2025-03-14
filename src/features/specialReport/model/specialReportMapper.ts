@@ -1,6 +1,6 @@
 import {PreReport, SpecialReport} from '../../../entitites/specialReports';
 import {SpecialReportDTO} from './specialReportDTO';
-import {PreReportDTO} from './specialReportDTO.d';
+import {PreReportDTO} from './specialReportDTO';
 
 export function specialReportDTOToEntity(
   specialReportDTO: SpecialReportDTO,
