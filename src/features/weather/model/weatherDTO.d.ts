@@ -132,5 +132,18 @@ type MidTa = {
 } & Record<RequiredTemperatureKeys, number> &
   Partial<Record<OptionalTemperatureKeys, number>>;
 
+export type MidCondition =
+  | '맑음'
+  | '구름많음'
+  | '구름많고 비'
+  | '구름많고 눈'
+  | '구름많고 비/눈'
+  | '구름많고 소나기'
+  | '흐림'
+  | '흐리고 비'
+  | '흐리고 눈'
+  | '흐리고 비/눈'
+  | '흐리고 소나기';
+
 export type MidLandFcstDTO = WeatherDTO<MidLandFcst>;
 export type MidTaDTO = WeatherDTO<MidTa>;

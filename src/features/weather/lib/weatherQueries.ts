@@ -5,7 +5,11 @@ import {
   getMidTemplate,
   getNcstWeather,
 } from '../api/WeatherApi';
-import {WeatherFcstItemDTO, VilageFcstCategory} from '../model/weatherDTO';
+import {
+  WeatherFcstItemDTO,
+  VilageFcstCategory,
+  MidCondition,
+} from '../model/weatherDTO';
 import {
   ncstDTOToCurrentWeather,
   vilageFcstDTOToWeathers,
@@ -15,6 +19,7 @@ import {getSunRiseSet} from '../api/riseApi';
 import {RiseSetData} from '../model/riseDTO';
 import {MidTaRegId, RegId} from '../../geoLocation/model/geoLocationStore';
 import dayjs from 'dayjs';
+import {getMidWeatherStatus} from './weatherUtil';
 
 interface WeatherQueryParams {
   base_date: string;
@@ -122,12 +127,12 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
           }
           const targetWeather = getTargetItem(result, targetDate);
           const [propType, AmPm] = category.split(/\d+/);
-
+          const condition = getMidWeatherStatus(value as MidCondition);
           if (propType === 'wf') {
             if (AmPm === 'Am') {
-              targetWeather.amCon = value as string;
+              targetWeather.amCon = condition;
             } else {
-              targetWeather.pmCon = value as string;
+              targetWeather.pmCon = condition;
             }
           }
         }
@@ -152,8 +157,8 @@ export const dailyTemperatureQueryOption = (
       }
       const result: {
         date: string;
-        min: number | undefined;
-        max: number | undefined;
+        min: number;
+        max: number;
       }[] = [];
       const date = dayjs(tmFc.substring(0, 8));
       const item = data.body.items.item[0];
@@ -170,7 +175,11 @@ export const dailyTemperatureQueryOption = (
           }
           const targetDate = date.add(+num[0], 'day').format('YYYYMMDD');
           if (!getTargetItem(result, targetDate)) {
-            result.push({date: targetDate, min: undefined, max: undefined});
+            result.push({
+              date: targetDate,
+              min: Number.MIN_SAFE_INTEGER,
+              max: Number.MAX_SAFE_INTEGER,
+            });
           }
 
           const targetWeather = getTargetItem(result, targetDate);

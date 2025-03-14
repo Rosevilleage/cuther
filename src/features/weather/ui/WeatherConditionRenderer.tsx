@@ -8,6 +8,7 @@ import Cloud from './../../../assets/icons/svg/cloud_icon.svg';
 import Rain from './../../../assets/icons/svg/rain_icon.svg';
 import Snow from './../../../assets/icons/svg/snow_icon.svg';
 import RainSnow from './../../../assets/icons/svg/rainSnow_icon.svg';
+import {WeatherCondition} from '../../../entitites/Weather';
 // import Thunder from './../../../assets/icons/svg/thunder_icon.svg';
 
 export default function WeatherConditionRenderer({
@@ -16,12 +17,15 @@ export default function WeatherConditionRenderer({
   light,
   size,
 }: {
-  condition: number;
+  condition: number | WeatherCondition;
   rain: number;
   light: boolean;
   size: number;
 }) {
-  const status = genWeatherStatus(condition, rain);
+  const status =
+    typeof condition === 'number'
+      ? genWeatherStatus(condition, rain)
+      : condition;
   if (status === 'clear' || status === 'littleCloud') {
     if (light) {
       if (status === 'clear') {

@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
-import {BaseDate, BaseTime} from '../model/weatherDTO';
-import {Weather} from '../../../entitites/Weather';
+import {BaseDate, BaseTime, MidCondition} from '../model/weatherDTO';
+import {Weather, WeatherCondition} from '../../../entitites/Weather';
 
 const baseTimes = [
   '0200',
@@ -106,7 +106,10 @@ export function perceivedTemperatureToLevel(
   return 0;
 }
 
-export function genWeatherStatus(condition: number, rain: number) {
+export function genWeatherStatus(
+  condition: number,
+  rain: number,
+): WeatherCondition {
   if (rain !== 0) {
     if (rain === 1 || rain === 5) {
       return 'rain';
@@ -146,4 +149,26 @@ export function mostFrequentConditionRain(weathers: Weather[]) {
     condition: mostFrequent(conditionCount),
     rain: mostFrequent(rainCount),
   };
+}
+
+export function getMidWeatherStatus(condition: MidCondition) {
+  switch (condition) {
+    case '맑음':
+      return 'clear';
+    case '흐림':
+      return 'littleCloud';
+    case '구름많고 비':
+    case '구름많고 소나기':
+    case '흐리고 비':
+    case '흐리고 소나기':
+      return 'rain';
+    case '구름많고 눈':
+    case '흐리고 눈':
+      return 'snow';
+    case '구름많고 비/눈':
+    case '흐리고 비/눈':
+      return 'rainSnow';
+    case '구름많음':
+      return 'cloud';
+  }
 }

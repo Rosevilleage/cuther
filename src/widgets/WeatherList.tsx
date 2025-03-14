@@ -1,11 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {HourlyWeathers} from '../entitites/Weather';
+import {
+  DailyWeathers,
+  HourlyWeathers,
+  Weather,
+  WeatherCondition,
+} from '../entitites/Weather';
 
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
 
-import dayjs from 'dayjs';
-import {mostFrequentConditionRain} from '../features/weather/lib/weatherUtil';
+import {genWeatherStatus} from '../features/weather/lib/weatherUtil';
 import Arrow from './../assets/icons/svg/arrow.svg';
 import Animated, {
   useAnimatedStyle,
@@ -13,25 +17,82 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
+
+type MixedDailyWeather = {
+  [date: string]: {
+    amCon: WeatherCondition;
+    pmCon: WeatherCondition;
+    min: number;
+    max: number;
+    hourly?: Weather[];
+  };
+};
+
 const CELSIUS = '℃';
 
 export default function WeatherList({
   hourlyWeathers,
+  dailyWeathers,
   sunRiseSet,
 }: {
   hourlyWeathers: HourlyWeathers;
-
+  dailyWeathers: DailyWeathers[];
   sunRiseSet: [string, string];
 }) {
   const [openItemId, setOpenItemId] = useState<number | null>(null);
+  const weathers: MixedDailyWeather = {};
+
+  Object.entries(hourlyWeathers)
+    .slice(1, -1)
+    .forEach(([date, data]) => {
+      const subMin = Math.min(
+        ...data.weathers.map(({temperature}) => temperature),
+      );
+      const subMax = Math.max(
+        ...data.weathers.map(({temperature}) => temperature),
+      );
+      const amWeather = data.weathers.find(
+        ({temperature}) => subMin === temperature,
+      ) as Weather;
+      const pmWeather = data.weathers.find(
+        ({temperature}) => subMax === temperature,
+      ) as Weather;
+
+      weathers[date] = {
+        amCon: genWeatherStatus(amWeather.condition, amWeather.rain),
+        pmCon: genWeatherStatus(pmWeather.condition, pmWeather.rain),
+        min: data.min ?? subMin,
+        max: data.max ?? subMax,
+        hourly: data.weathers,
+      };
+    });
+
+  dailyWeathers.forEach(({date, amCon, pmCon, max, min}) => {
+    if (!weathers[date]) {
+      weathers[date] = {
+        amCon: amCon as WeatherCondition,
+        pmCon: pmCon as WeatherCondition,
+        max,
+        min,
+      };
+    } else {
+      weathers[date] = {
+        ...weathers[date],
+        amCon: amCon as WeatherCondition,
+        pmCon: pmCon as WeatherCondition,
+        max,
+        min,
+      };
+    }
+  });
 
   return (
     <View style={styles.container}>
       <FlatList
-        data={Object.entries(hourlyWeathers).slice(1)}
+        data={Object.entries(weathers).slice(1, -1)}
         renderItem={({item, index}) => (
           <WeatherStack
-            hourlyWeathers={item[1]}
+            dailyWeathers={item[1]}
             sunRiseSet={sunRiseSet}
             day={item[0]}
             isOpen={openItemId === index}
@@ -45,24 +106,20 @@ export default function WeatherList({
 }
 
 function WeatherStack({
-  hourlyWeathers: dailyWeathers,
+  dailyWeathers,
   day,
   isOpen,
   onToggle,
   sunRiseSet,
 }: {
-  hourlyWeathers: HourlyWeathers[keyof HourlyWeathers];
+  dailyWeathers: MixedDailyWeather[keyof MixedDailyWeather];
   day: string;
   isOpen: boolean;
   sunRiseSet: [string, string];
   onToggle: () => void;
 }) {
-  const [sunRise, sunSet] = sunRiseSet;
   const mm = day.substring(4, 6),
     dd = day.substring(6);
-  const nowTime = dayjs().format('HHmm');
-
-  const {condition, rain} = mostFrequentConditionRain(dailyWeathers.weathers);
 
   const animationHeight = useSharedValue(0);
   const ToggleExpand = () => {
@@ -91,11 +148,25 @@ function WeatherStack({
             {+mm}월 {dd}일
           </Text>
           {/* icon */}
-          <View style={{flex: 1, alignItems: 'center'}}>
+          <View
+            style={{
+              flex: 1,
+              flexDirection: 'row',
+              alignItems: 'center',
+              justifyContent: 'center',
+              gap: 20,
+            }}>
             <WeatherConditionRenderer
-              condition={condition}
-              rain={rain}
-              light={nowTime >= sunRise && nowTime < sunSet}
+              condition={dailyWeathers.amCon}
+              rain={0}
+              light
+              size={35}
+            />
+            <Text style={{fontSize: 30, color: 'lightgray'}}>|</Text>
+            <WeatherConditionRenderer
+              condition={dailyWeathers.amCon}
+              rain={0}
+              light
               size={35}
             />
           </View>
@@ -107,51 +178,48 @@ function WeatherStack({
               gap: 5,
             }}>
             <Text>
-              {dailyWeathers.min ||
-                Math.min(
-                  ...dailyWeathers.weathers.map(weather => weather.temperature),
-                )}
+              {dailyWeathers.min}
               {CELSIUS}
             </Text>
             <Text>|</Text>
             <Text>
-              {dailyWeathers.max ||
-                Math.max(
-                  ...dailyWeathers.weathers.map(weather => weather.temperature),
-                )}
+              {dailyWeathers.max}
               {CELSIUS}
             </Text>
           </View>
         </View>
-        <TouchableOpacity
-          onPress={ToggleExpand}
-          style={{justifyContent: 'center'}}>
-          <Arrow
-            style={{
-              transform: [{rotate: isOpen ? '180deg' : '0deg'}],
-              marginTop: -15,
-            }}
-          />
-        </TouchableOpacity>
+        {dailyWeathers.hourly && (
+          <TouchableOpacity
+            onPress={ToggleExpand}
+            style={{justifyContent: 'center'}}>
+            <Arrow
+              style={{
+                transform: [{rotate: isOpen ? '180deg' : '0deg'}],
+                marginTop: -15,
+              }}
+            />
+          </TouchableOpacity>
+        )}
         {/* horizontal scroll */}
       </View>
       {/* {isOpen && ( */}
-      <Animated.View style={[animatedStyle, {overflow: 'hidden'}]}>
-        <View
-          style={{
-            paddingVertical: 10,
-            paddingHorizontal: 10,
-            marginTop: 5,
-            backgroundColor: '#ffffff',
-          }}>
-          <RowHourlyWeathersView
-            hourlyWeathers={dailyWeathers.weathers}
-            sunRiseSet={sunRiseSet}
-            day={day}
-          />
-        </View>
-        {/* )} */}
-      </Animated.View>
+      {dailyWeathers.hourly && (
+        <Animated.View style={[animatedStyle, {overflow: 'hidden'}]}>
+          <View
+            style={{
+              paddingVertical: 10,
+              paddingHorizontal: 10,
+              marginTop: 5,
+              backgroundColor: '#ffffff',
+            }}>
+            <RowHourlyWeathersView
+              hourlyWeathers={dailyWeathers.hourly}
+              sunRiseSet={sunRiseSet}
+              day={day}
+            />
+          </View>
+        </Animated.View>
+      )}
     </View>
   );
 }
