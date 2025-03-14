@@ -16,7 +16,7 @@ import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 import {dfsXYConv} from './src/features/weather/lib/latlonGridConverter';
 
 import {getGeoLocation} from './src/features/geoLocation/api/geoLocationApi';
-import {placeDTOToEntity} from './src/features/place/model/placeMapper';
+import {geoLocationDTOToEntity} from './src/features/geoLocation/model/geoLocationMapper';
 import {useGeoLocation} from './src/features/geoLocation/model/geoLocationStore';
 
 enableScreens(false);
@@ -58,7 +58,7 @@ function App(): React.JSX.Element {
                 '해당 서비스는 대한민국에서만 지원됩니다.',
               );
             } else {
-              const formattedPlace = placeDTOToEntity(placeData);
+              const formattedPlace = geoLocationDTOToEntity(placeData);
               setRegion(formattedPlace);
             }
           },
