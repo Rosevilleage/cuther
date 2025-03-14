@@ -1,5 +1,10 @@
 import {queryOptions} from '@tanstack/react-query';
-import {getFcstWeather, getNcstWeather} from '../api/WeatherApi';
+import {
+  getFcstWeather,
+  getMidConditions,
+  getMidTemplate,
+  getNcstWeather,
+} from '../api/WeatherApi';
 import {WeatherFcstItemDTO, VilageFcstCategory} from '../model/weatherDTO';
 import {
   ncstDTOToCurrentWeather,
@@ -8,6 +13,8 @@ import {
 import {getSunRiseSet} from '../api/riseApi';
 
 import {RiseSetData} from '../model/riseDTO';
+import {MidTaRegId, RegId} from '../../geoLocation/model/geoLocationStore';
+import dayjs from 'dayjs';
 
 interface WeatherQueryParams {
   base_date: string;
@@ -31,8 +38,6 @@ export const hourlyQueryOption = (hourlyWeatherParams: WeatherQueryParams) => {
         hourlyWeatherParams,
       ).then(res => res.data.response),
     select(data) {
-      console.log(data);
-
       if (data.header.resultCode !== '00') {
         throw new Error(`api error: ${data.header.resultMsg}`);
       }
@@ -86,3 +91,108 @@ export const sunRiseSetQueryOption = (
     enabled: lat !== 0 && lng !== 0,
   });
 };
+
+export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
+  return queryOptions({
+    queryKey: ['weather', 'daily', 'condition', regId],
+    queryFn: () => getMidConditions(regId, tmFc).then(res => res.data.response),
+    select(data) {
+      if (data.header.resultCode !== '00') {
+        throw new Error(`api error: ${data.header.resultMsg}`);
+      }
+      const result: {
+        date: string;
+        amCon: string;
+        pmCon: string;
+      }[] = [];
+      const date = dayjs(tmFc.substring(0, 8));
+      const item = data.body.items.item[0];
+      Object.entries(item).forEach(([category, value]) => {
+        if (category === 'regId') {
+          return;
+        }
+        const num = category.match(/\d+/g);
+        if (num) {
+          if (+num[0] > 7) {
+            return;
+          }
+          const targetDate = date.add(+num[0], 'day').format('YYYYMMDD');
+          if (!getTargetItem(result, targetDate)) {
+            result.push({date: targetDate, amCon: '', pmCon: ''});
+          }
+          const targetWeather = getTargetItem(result, targetDate);
+          const [propType, AmPm] = category.split(/\d+/);
+
+          if (propType === 'wf') {
+            if (AmPm === 'Am') {
+              targetWeather.amCon = value as string;
+            } else {
+              targetWeather.pmCon = value as string;
+            }
+          }
+        }
+      });
+      return result;
+    },
+    enabled: !!regId,
+  });
+};
+
+export const dailyTemperatureQueryOption = (
+  midTaRegId: MidTaRegId,
+  tmFc: string,
+) => {
+  return queryOptions({
+    queryKey: ['weather', 'daily', 'template', midTaRegId],
+    queryFn: () =>
+      getMidTemplate(midTaRegId, tmFc).then(res => res.data.response),
+    select(data) {
+      if (data.header.resultCode !== '00') {
+        throw new Error(`api error: ${data.header.resultMsg}`);
+      }
+      const result: {
+        date: string;
+        min: number | undefined;
+        max: number | undefined;
+      }[] = [];
+      const date = dayjs(tmFc.substring(0, 8));
+      const item = data.body.items.item[0];
+
+      Object.entries(item).forEach(([category, value]) => {
+        if (category === 'regId') {
+          return;
+        }
+        const num = category.match(/\d+/g);
+
+        if (num) {
+          if (+num[0] > 7) {
+            return;
+          }
+          const targetDate = date.add(+num[0], 'day').format('YYYYMMDD');
+          if (!getTargetItem(result, targetDate)) {
+            result.push({date: targetDate, min: undefined, max: undefined});
+          }
+
+          const targetWeather = getTargetItem(result, targetDate);
+
+          const [propType, option] = category.split(/\d+/);
+
+          if (propType === 'taMax' && option === '') {
+            targetWeather.max = +value;
+          } else if (propType === 'taMin' && option === '') {
+            targetWeather.min = +value;
+          }
+        }
+      });
+      return result;
+    },
+    enabled: !!midTaRegId,
+  });
+};
+
+function getTargetItem<T extends {date: string}>(
+  dictionary: T[],
+  targetDate: string,
+): T {
+  return dictionary.find(weather => weather.date === targetDate) as T;
+}
