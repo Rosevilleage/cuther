@@ -124,7 +124,7 @@ export const useGeoLocation = create<UseGeoLocation>(set => ({
     set(state => ({
       ...state,
       region: newRegion,
-      stnId: getStnId(newRegion.rootRegion),
+      stnId: getStnId(newRegion.topRegion),
       regId: getMidWeatherRegId(newRegion),
       midTaRegId: getMidTaRegId(newRegion),
     }));
