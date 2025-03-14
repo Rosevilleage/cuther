@@ -10,8 +10,6 @@ export const specialReportQueryOption = (stnId: number) => {
     queryKey: ['report', 'special', stnId],
     queryFn: () => getSpecialReports(stnId).then(res => res.data.response),
     select(data) {
-      console.log(data);
-
       if (data.header.resultCode === '03') {
         return 'noReports';
       } else if (data.header.resultCode !== '00') {
