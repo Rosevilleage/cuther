@@ -29,8 +29,8 @@ export class CurWeather {
 export class DailyWeathers {
   constructor(
     public date: string,
-    public morningCondition: number,
-    public afternoonCondition: number,
+    public amCon: string,
+    public pmCon: string,
     public min: number,
     public max: number,
   ) {}
