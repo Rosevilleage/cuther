@@ -5,8 +5,8 @@ import CharactorRenderer from '../features/weather/ui/CharactorRenderer';
 import {perceivedTemperatureToLevel} from '../features/weather/lib/weatherUtil';
 import dayjs from 'dayjs';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
-import {usePlaceStore} from '../features/place/model/placeStore';
 import {CurWeather} from '../entitites/Weather';
+import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
 
 export default function CurrentDisplay({
   currentWeather,
@@ -22,7 +22,7 @@ export default function CurrentDisplay({
     currentWeather.perceivedTemperature,
   );
   const base_time = dayjs().format('HHmm');
-  const place = usePlaceStore(state => state.place);
+  const region = useGeoLocation(state => state.region);
   return (
     <View style={styles.mainsection}>
       <View
@@ -62,10 +62,10 @@ export default function CurrentDisplay({
         </View>
         <View style={{flex: 1, gap: 5}}>
           <Text style={{textAlign: 'right', fontSize: 20}}>
-            {place.topRegion}
+            {region.topRegion}
             <Text style={{textAlign: 'right', fontSize: 16}}>
               {' '}
-              {place.middleRegion}
+              {region.middleRegion}
             </Text>
           </Text>
           <Text style={{textAlign: 'right', fontSize: 16}}>
