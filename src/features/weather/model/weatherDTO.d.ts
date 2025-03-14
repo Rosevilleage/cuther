@@ -1,4 +1,6 @@
-interface WeatherDTO<T extends WeatherFcstItemDTO | WeatherNcstItemDTO> {
+interface WeatherDTO<
+  T extends WeatherFcstItemDTO | WeatherNcstItemDTO | MidLandFcst | MidTaDTO,
+> {
   response: {
     body: {
       dataType: 'XML' | 'JSON';
@@ -77,3 +79,58 @@ export type UltraNcstItem = WeatherNcstItemDTO;
 export type BaseDate =
   `${number}${number}${number}${number}${number}${number}${number}${number}`;
 export type BaseTime = `${number}${number}${number}${number}`;
+
+type RainProbabilityKeys =
+  | 'rnSt5Am'
+  | 'rnSt5Pm'
+  | 'rnSt6Am'
+  | 'rnSt6Pm'
+  | 'rnSt7Am'
+  | 'rnSt7Pm'
+  | 'rnSt8'
+  | 'rnSt9'
+  | 'rnSt10';
+
+type WeatherDescriptionKeys =
+  | 'wf5Am'
+  | 'wf5Pm'
+  | 'wf6Am'
+  | 'wf6Pm'
+  | 'wf7Am'
+  | 'wf7Pm'
+  | 'wf8'
+  | 'wf9'
+  | 'wf10';
+
+type OptionalRainProbabilityKeys = 'rnSt4Am' | 'rnSt4Pm';
+type OptionalWeatherDescriptionKeys = 'wf4Am' | 'wf4Pm';
+type RequiredTemperatureKeys =
+  | `taMax${5 | 6 | 7 | 8 | 9 | 10}`
+  | `taMax${5 | 6 | 7 | 8 | 9 | 10}High`
+  | `taMax${5 | 6 | 7 | 8 | 9 | 10}Low`
+  | `taMin${5 | 6 | 7 | 8 | 9 | 10}`
+  | `taMin${5 | 6 | 7 | 8 | 9 | 10}High`
+  | `taMin${5 | 6 | 7 | 8 | 9 | 10}Low`;
+
+type OptionalTemperatureKeys =
+  | 'taMax4'
+  | 'taMax4High'
+  | 'taMax4Low'
+  | 'taMin4'
+  | 'taMin4High'
+  | 'taMin4Low';
+
+export type MidLandFcst = {
+  regId: string;
+} & Record<RainProbabilityKeys, number> &
+  Record<WeatherDescriptionKeys, string> &
+  Partial<Record<OptionalRainProbabilityKeys, number>> &
+  Partial<Record<OptionalWeatherDescriptionKeys, string>>;
+
+type MidTa = {
+  regId: string;
+} & Record<RequiredTemperatureKeys, number> &
+  Partial<Record<OptionalTemperatureKeys, number>>;
+
+export type MidLandFcstDTO = WeatherDTO<MidLandFcst>;
+export type MidTaDTO = WeatherDTO<MidTa>;
