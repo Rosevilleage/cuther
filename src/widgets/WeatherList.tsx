@@ -51,12 +51,12 @@ export default function WeatherList({
       const subMax = Math.max(
         ...data.weathers.map(({temperature}) => temperature),
       );
-      const amWeather = data.weathers.find(
-        ({temperature}) => subMin === temperature,
-      ) as Weather;
-      const pmWeather = data.weathers.find(
-        ({temperature}) => subMax === temperature,
-      ) as Weather;
+      const amWeather = data.weathers
+        .filter(({time}) => +sunRiseSet[0] <= +time && +time < 1200)
+        .sort((a, b) => a.temperature - b.temperature)[0];
+      const pmWeather = data.weathers
+        .filter(({time}) => +time >= 12 && +time < +sunRiseSet[1])
+        .sort((a, b) => b.temperature - a.temperature)[0];
 
       weathers[date] = {
         amCon: genWeatherStatus(amWeather.condition, amWeather.rain),
