@@ -16,7 +16,7 @@ function SimpleReportView({
       <SimpleReportCard
         reportTitles={
           specialReports !== 'noReports'
-            ? specialReports.map(({title}) => title)
+            ? [...new Set(specialReports.map(({title}) => title))]
             : 'noReports'
         }
         emptyTitle="기상 특보가 없습니다."
@@ -25,7 +25,7 @@ function SimpleReportView({
       <SimpleReportCard
         reportTitles={
           preReports !== 'noReports'
-            ? preReports.map(({title}) => title)
+            ? [...new Set(preReports.map(({title}) => title))]
             : 'noReports'
         }
         emptyTitle="예비 특보가 없습니다."
