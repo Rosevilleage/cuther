@@ -1,18 +1,29 @@
 import React from 'react';
-import {createDrawerNavigator} from '@react-navigation/drawer';
-import MainScreen from '../pages/main/MainScreen';
 import {NavigationContainer} from '@react-navigation/native';
+import MainDrawerNavigation from './routes/MainDrawer';
+import {createStackNavigator} from '@react-navigation/stack';
+import ReportScreen from '../pages/main/ReportScreen';
 
-const MainDrawer = createDrawerNavigator();
+const Stack = createStackNavigator();
 
 export default function Navigation() {
   return (
     <NavigationContainer>
-      <MainDrawer.Navigator
-        initialRouteName="Main"
-        screenOptions={{headerTitle: ''}}>
-        <MainDrawer.Screen name="Main" component={MainScreen} />
-      </MainDrawer.Navigator>
+      <Stack.Navigator>
+        <Stack.Screen
+          name="Main"
+          component={MainDrawerNavigation}
+          options={{headerShown: false}}
+        />
+        <Stack.Screen
+          name="Report"
+          component={ReportScreen}
+          options={{
+            headerShown: true,
+            title: '특보 정보',
+          }}
+        />
+      </Stack.Navigator>
     </NavigationContainer>
   );
 }
