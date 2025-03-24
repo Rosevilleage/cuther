@@ -14,7 +14,6 @@ import {
   sunRiseSetQueryOption,
 } from '../../features/weather/lib/weatherQueries';
 import {
-  MidTaRegId,
   RegId,
   useGeoLocation,
 } from '../../features/geoLocation/model/geoLocationStore';
@@ -27,6 +26,7 @@ import {
   specialReportQueryOption,
 } from '../../features/specialReport/lib/specialReportQueries';
 import {DailyWeathers} from '../../entitites/Weather';
+import {MidTaRegId} from '../../features/geoLocation/lib/geoLocationUtils';
 
 export default function MainScreen() {
   const {nx, ny, lat, lng, regId, midTaRegId, stnId} = useGeoLocation();
@@ -69,9 +69,11 @@ export default function MainScreen() {
     // isError: dailyWeatherIsError,
     // isLoading: dailyWeatherIsLoading,
   } = useQuery(dailyConditionQueryOption(regId as RegId, tmFc));
+
   const {data: dailyTemperature} = useQuery(
     dailyTemperatureQueryOption(midTaRegId as MidTaRegId, tmFc),
   );
+
   const dailyWeathers: DailyWeathers[] | undefined =
     dailyConditions && dailyTemperature
       ? dailyConditions.map((conditions, i) => {

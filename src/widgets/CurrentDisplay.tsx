@@ -62,10 +62,10 @@ export default function CurrentDisplay({
         </View>
         <View style={{flex: 1, gap: 5}}>
           <Text style={{textAlign: 'right', fontSize: 20}}>
-            {region.topRegion}
+            {region.area1}
             <Text style={{textAlign: 'right', fontSize: 16}}>
               {' '}
-              {region.middleRegion}
+              {region.area2}
             </Text>
           </Text>
           <Text style={{textAlign: 'right', fontSize: 16}}>

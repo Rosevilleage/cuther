@@ -17,9 +17,10 @@ import {
 import {getSunRiseSet} from '../api/riseApi';
 
 import {RiseSetData} from '../model/riseDTO';
-import {MidTaRegId, RegId} from '../../geoLocation/model/geoLocationStore';
+import {RegId} from '../../geoLocation/model/geoLocationStore';
 import dayjs from 'dayjs';
 import {getMidWeatherStatus} from './weatherUtil';
+import {MidTaRegId} from '../../geoLocation/lib/geoLocationUtils';
 
 interface WeatherQueryParams {
   base_date: string;
@@ -151,8 +152,9 @@ export const dailyTemperatureQueryOption = (
 ) => {
   return queryOptions({
     queryKey: ['weather', 'daily', 'template', midTaRegId],
-    queryFn: () =>
-      getMidTemplate(midTaRegId, tmFc).then(res => res.data.response),
+    queryFn: () => {
+      return getMidTemplate(midTaRegId, tmFc).then(res => res.data.response);
+    },
     select(data) {
       if (data.header.resultCode !== '00') {
         throw new Error(`api error: ${data.header.resultMsg}`);
