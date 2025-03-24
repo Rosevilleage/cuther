@@ -1,6 +1,11 @@
+import {useNavigation, NavigationProp} from '@react-navigation/native';
 import React from 'react';
-import {StyleSheet, Text, View} from 'react-native';
+import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Swiper from 'react-native-swiper';
+
+type RootStackParamList = {
+  Report: undefined;
+};
 
 function SimpleReportCard({
   reportTitles,
@@ -9,14 +14,16 @@ function SimpleReportCard({
   reportTitles: string[] | 'noReports';
   emptyTitle: string;
 }) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   return (
-    <View
+    <Pressable
       style={{
         flex: 1,
         backgroundColor: '#fff',
         borderRadius: 15,
         height: 150,
-      }}>
+      }}
+      onPress={() => navigation.navigate('Report')}>
       {reportTitles !== 'noReports' ? (
         <Swiper
           autoplay
@@ -35,7 +42,7 @@ function SimpleReportCard({
           <Text style={styles.reportText}>{emptyTitle}</Text>
         </View>
       )}
-    </View>
+    </Pressable>
   );
 }
 const styles = StyleSheet.create({
