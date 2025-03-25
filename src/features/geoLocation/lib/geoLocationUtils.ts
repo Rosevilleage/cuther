@@ -376,6 +376,37 @@ export type MidTaRegId =
   (typeof midTaRegionCodes)[keyof typeof midTaRegionCodes];
 
 export function getMidTaRegId(region: Region) {
+  // 도서 지역 처리
+  if (
+    region.area1 === '인천광역시' &&
+    region.area2 === '옹진군' &&
+    region.area3 === '백령면'
+  ) {
+    return midTaRegionCodes.백령도;
+  }
+
+  if (region.area1 === '경상북도' && region.area2 === '울릉군') {
+    if (region.area3 === '울릉읍' && region.area4 === '독도리') {
+      return midTaRegionCodes.독도;
+    }
+    if (region.area3 === '울릉읍' && region.area4 === '저동리') {
+      return midTaRegionCodes.울릉도;
+    }
+  }
+
+  if (region.area1 === '제주특별자치도') {
+    if (region.area2 === '제주시' && region.area3 === '추자면') {
+      return midTaRegionCodes.추자도;
+    }
+    if (
+      region.area2 === '서귀포시' &&
+      region.area3 === '대정읍' &&
+      region.area4 === '가파리'
+    ) {
+      return midTaRegionCodes.진도;
+    }
+  }
+
   // 특별시/광역시 처리
   if (region.area1.includes('광역시')) {
     const cityName = region.area1.replace('광역시', '').trim();
