@@ -5,16 +5,43 @@ import {PreReportDTO} from './specialReportDTO';
 export function specialReportDTOToEntity(
   specialReportDTO: SpecialReportDTO,
 ): SpecialReport[] {
-  return specialReportDTO.items.item.map(report => {
-    const title = report.t1,
-      content = report.t2.substring(6 + report.t1.length).trim(),
-      date = report.t3.substring(6 + report.t1.length).trim();
-    return new SpecialReport(title, content, date);
+  const entity: SpecialReport[] = [];
+
+  specialReportDTO.items.item.forEach(report => {
+    // title은 t1에서 가져옴
+    const title = report.t1;
+
+    // content는 t2에서 발효 지역만 추출
+    const content = report.t2
+      .split('\r\n')
+      .map(line => {
+        // (1), (2) 등의 번호 제거
+        const cleanLine = line.replace(/^\(\d+\)\s*/, '');
+        // 콜론 이후의 지역 정보만 추출
+        const regionInfo = cleanLine.split(':')[1]?.trim();
+        return regionInfo;
+      })
+      .filter(Boolean)
+      .join('\n');
+
+    // date는 t3에서 추출
+    const dateMatch = report.t3.match(
+      /\d{4}년\s+\d{2}월\s+\d{2}일\s+\d{2}시\s+\d{2}분/,
+    );
+    const date = dateMatch ? dateMatch[0] : '';
+
+    entity.push(new SpecialReport(title, content, date));
   });
+
+  return entity;
 }
 
 export function preReportDTOToEntity(preReportDTO: PreReportDTO): PreReport[] {
   const entity: PreReport[] = [];
+  console.log(preReportDTO);
+
+  // item : Array(1)
+  // 0 : { pwn : "(1) 강풍 예비특보\r\no 03월 25일 오후(12시~18시) : 경기도(안산, 시흥, 김포, 평택, 화성), 서해5도, 인천", rem : "o 없음", stnId : "109", tmFc : 20250325040, tmSeq :  16 }
 
   preReportDTO.items.item.forEach(report => {
     const sections = report.pwn.split(/\(\d+\)/).filter(Boolean);

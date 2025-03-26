@@ -141,8 +141,12 @@ function ReportScreen() {
                   <Text style={{fontSize: 16, fontWeight: 'bold'}}>
                     {item.title}
                   </Text>
-                  {item.children.map(child => (
-                    <Text style={{fontSize: 14}}>{child.content}</Text>
+                  {item.children.map((child, index) => (
+                    <Text
+                      style={{fontSize: 14}}
+                      key={`${index}${child.content}`}>
+                      {child.content}
+                    </Text>
                   ))}
                 </View>
               )}
