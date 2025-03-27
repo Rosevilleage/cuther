@@ -13,11 +13,11 @@ import {SafeAreaProvider} from 'react-native-safe-area-context';
 import {enableScreens} from 'react-native-screens';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
-import {dfsXYConv} from './src/features/weather/lib/latlonGridConverter';
 
 import {getGeoLocation} from './src/features/geoLocation/api/geoLocationApi';
 import {geoLocationDTOToEntity} from './src/features/geoLocation/model/geoLocationMapper';
 import {useGeoLocation} from './src/features/geoLocation/model/geoLocationStore';
+import {getXYConv} from './src/features/geoLocation/lib/geoLocationUtils';
 
 enableScreens(false);
 
@@ -45,7 +45,7 @@ function App(): React.JSX.Element {
         Geolocation.getCurrentPosition(
           async position => {
             const {latitude, longitude} = position.coords;
-            const {nx, ny, lat, lng} = dfsXYConv('toXY', latitude, longitude);
+            const {nx, ny, lat, lng} = getXYConv(latitude, longitude);
             setLatLng(lat, lng);
             setXY(nx, ny);
             const placeData = await getGeoLocation(lat, lng).then(
