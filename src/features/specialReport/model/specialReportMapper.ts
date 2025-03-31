@@ -38,8 +38,6 @@ export function specialReportDTOToEntity(
 
 export function preReportDTOToEntity(preReportDTO: PreReportDTO): PreReport[] {
   const entity: PreReport[] = [];
-  console.log(preReportDTO);
-
   // item : Array(1)
   // 0 : { pwn : "(1) 강풍 예비특보\r\no 03월 25일 오후(12시~18시) : 경기도(안산, 시흥, 김포, 평택, 화성), 서해5도, 인천", rem : "o 없음", stnId : "109", tmFc : 20250325040, tmSeq :  16 }
 
