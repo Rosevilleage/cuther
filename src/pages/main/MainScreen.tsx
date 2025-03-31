@@ -1,7 +1,6 @@
 import React from 'react';
 import {ScrollView, useWindowDimensions, View} from 'react-native';
 
-import CurrentDisplay from '../../widgets/CurrentDisplay';
 import WeatherList from '../../widgets/WeatherList';
 import TodayHourlyWeathers from '../../widgets/TodayHourlyWeathers';
 
@@ -27,6 +26,7 @@ import {
 } from '../../features/specialReport/lib/specialReportQueries';
 import {DailyWeathers} from '../../entitites/Weather';
 import {MidTaRegId} from '../../features/geoLocation/lib/geoLocationUtils';
+import SwipeableWeatherContainer from '../../widgets/SwipeableWeatherContainer';
 
 export default function MainScreen() {
   const {nx, ny, lat, lng, regId, midTaRegId, stnId} = useGeoLocation();
@@ -91,17 +91,12 @@ export default function MainScreen() {
   return (
     <ScrollView style={{width, height}}>
       <View style={{flex: 1, padding: 10, gap: 15}}>
-        {/* currentDisplay */}
-        {currentWeather && sunRiseSet && (
-          <CurrentDisplay
+        {/* 날씨 표시 */}
+        {currentWeather && sunRiseSet && hourlyWeathers && (
+          <SwipeableWeatherContainer
             currentWeather={currentWeather}
+            hourlyWeathers={hourlyWeathers}
             sunRiseSet={sunRiseSet}
-            condition={
-              hourlyWeathers && Object.keys(hourlyWeathers)[0]
-                ? hourlyWeathers[Object.keys(hourlyWeathers)[0]].weathers[0]
-                    .condition
-                : 1
-            }
           />
         )}
         {/* 시간별 날씨 */}
