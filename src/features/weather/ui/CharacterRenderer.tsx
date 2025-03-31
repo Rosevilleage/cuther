@@ -17,7 +17,7 @@ const charactors = {
   8: {src: require('./../../../assets/animation/cold.json')},
 };
 
-export default function CharactorRenderer({
+export default function CharacterRenderer({
   type,
   loop,
   autoPlay,
