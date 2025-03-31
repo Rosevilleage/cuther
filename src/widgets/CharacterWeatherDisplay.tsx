@@ -1,36 +1,60 @@
 import React from 'react';
 import {View, Text, StyleSheet} from 'react-native';
 
-import CharactorRenderer from '../features/weather/ui/CharactorRenderer';
+import CharacterRenderer from '../features/weather/ui/CharacterRenderer';
 import {perceivedTemperatureToLevel} from '../features/weather/lib/weatherUtil';
 import dayjs from 'dayjs';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
 import {CurWeather} from '../entitites/Weather';
 import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
 
-export default function CurrentDisplay({
+export default function CharacterWeatherDisplay({
   currentWeather,
   sunRiseSet,
   condition,
+  selectedDate,
 }: {
-  currentWeather: CurWeather;
+  currentWeather: CurWeather | null;
   sunRiseSet: [string, string];
   condition: number;
+  selectedDate?: string;
 }) {
+  const region = useGeoLocation(state => state.region);
+  if (!currentWeather) {
+    return null;
+  }
   const [sunRise, sunSet] = sunRiseSet;
   const perceivedTempLevel = perceivedTemperatureToLevel(
     currentWeather.perceivedTemperature,
   );
   const base_time = dayjs().format('HHmm');
-  const region = useGeoLocation(state => state.region);
+
   return (
     <View style={styles.mainsection}>
+      <View style={selectedDate ? styles.dateContainer : {marginBottom: 45}}>
+        {selectedDate && (
+          <>
+            <Text style={[styles.dateText, {color: 'gray'}]}>
+              {dayjs(selectedDate, 'YYYYMMDDHHmm').format('MM월 DD일')}
+            </Text>
+            <Text
+              style={[
+                styles.dateText,
+                {
+                  color: 'black',
+                },
+              ]}>
+              {dayjs(selectedDate, 'YYYYMMDDHHmm').format('HH시')}
+            </Text>
+          </>
+        )}
+      </View>
       <View
         style={{
           height: 400,
           overflow: 'hidden',
         }}>
-        <CharactorRenderer type={perceivedTempLevel} loop autoPlay />
+        <CharacterRenderer type={perceivedTempLevel} loop autoPlay />
       </View>
       <View style={styles.currentInfoContainer}>
         <View
@@ -50,10 +74,13 @@ export default function CurrentDisplay({
             light={+base_time >= +sunRise && +base_time <= +sunSet}
             size={60}
           />
-          <View style={{flex: 1, justifyContent: 'center'}}>
+          <View
+            style={{
+              flex: 1,
+              justifyContent: 'center',
+            }}>
             <Text
               style={{
-                height: '100%',
                 fontSize: 50,
               }}>
               {currentWeather.temperature}℃
@@ -91,8 +118,19 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainsection: {
+    height: 560,
     backgroundColor: 'white',
     borderRadius: 15,
+  },
+  dateContainer: {
+    flexDirection: 'row',
+    gap: 5,
+    padding: 10,
+    alignItems: 'center',
+  },
+  dateText: {
+    textAlign: 'left',
+    fontSize: 18,
   },
   character: {
     flex: 1,
