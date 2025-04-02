@@ -29,7 +29,14 @@ export default function SwipeableWeatherContainer({
           setSelectedTime(savedDate);
         }
       } catch (error) {
-        setSelectedTime(`${dayjs().add(6, 'hours').format('HH')}00`);
+        setSelectedTime(
+          dayjs()
+            .add(6, 'hours')
+            .minute(0)
+            .second(0)
+            .millisecond(0)
+            .format('HHmm'),
+        );
       }
     }, 1000);
     return () => {
@@ -81,6 +88,7 @@ export default function SwipeableWeatherContainer({
                 : targetData?.condition ?? 1
             }
             selectedDate={i === 0 ? undefined : `${targetDate}${selectedTime}`}
+            setSelectedDate={i === 0 ? undefined : setSelectedTime}
           />
         ))}
       </Swiper>
@@ -90,7 +98,7 @@ export default function SwipeableWeatherContainer({
 
 const styles = StyleSheet.create({
   container: {
-    height: 560,
+    height: 610,
   },
   swiper: {},
   slide: {},
