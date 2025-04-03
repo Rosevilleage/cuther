@@ -9,6 +9,10 @@ import {CurWeather} from '../entitites/Weather';
 import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
 import TimeSelectModal from '../features/weather/ui/TimeSelectModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+} from '../app/style/responsivePixel';
 
 export default function CharacterWeatherDisplay({
   currentWeather,
@@ -87,7 +91,7 @@ export default function CharacterWeatherDisplay({
       </View>
       <View
         style={{
-          height: 400,
+          height: responsiveHeight(400),
           overflow: 'hidden',
         }}>
         <CharacterRenderer type={perceivedTempLevel} loop autoPlay />
@@ -108,7 +112,7 @@ export default function CharacterWeatherDisplay({
             condition={condition}
             rain={currentWeather.rain}
             light={+base_time >= +sunRise && +base_time <= +sunSet}
-            size={60}
+            size={responsiveFontSize(60)}
           />
           <View
             style={{
@@ -117,13 +121,13 @@ export default function CharacterWeatherDisplay({
             }}>
             <Text
               style={{
-                fontSize: 50,
+                fontSize: responsiveFontSize(50),
               }}>
               {currentWeather.temperature}℃
             </Text>
           </View>
         </View>
-        <View style={{flex: 1, gap: 5}}>
+        <View style={{gap: 5, justifyContent: 'center'}}>
           <Text style={styles.textRightLarge}>
             {region.area1}
             <Text style={[styles.textRightNormal, styles.textNormal]}>
@@ -154,7 +158,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainsection: {
-    height: 600,
+    height: responsiveHeight(600),
     backgroundColor: 'white',
     borderRadius: 15,
   },
@@ -166,7 +170,7 @@ const styles = StyleSheet.create({
   },
   dateText: {
     textAlign: 'left',
-    fontSize: 18,
+    fontSize: responsiveFontSize(18),
   },
   character: {
     flex: 1,
@@ -180,11 +184,11 @@ const styles = StyleSheet.create({
   },
   textRightLarge: {
     textAlign: 'right',
-    fontSize: 20,
+    fontSize: responsiveFontSize(20),
   },
   textRightNormal: {
     textAlign: 'right',
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
   },
   textBold: {
     color: 'black',

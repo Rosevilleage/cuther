@@ -2,6 +2,7 @@ import React from 'react';
 import {Text, View} from 'react-native';
 import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
 import {HourlyWeathers} from '../entitites/Weather';
+import {responsiveFontSize} from '../app/style/responsivePixel';
 
 function TodayHourlyWeathers({
   weathers,
@@ -33,7 +34,9 @@ function TodayHourlyWeathers({
         borderRadius: 15,
         gap: 20,
       }}>
-      <Text style={{textAlign: 'center', fontSize: 23}}>시간별 날씨</Text>
+      <Text style={{textAlign: 'center', fontSize: responsiveFontSize(23)}}>
+        시간별 날씨
+      </Text>
       <RowHourlyWeathersView
         hourlyWeathers={totalWeathers}
         sunRiseSet={sunRiseSet}

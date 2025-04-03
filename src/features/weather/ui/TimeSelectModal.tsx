@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   ScrollView,
 } from 'react-native';
+import {responsiveFontSize} from '../../../app/style/responsivePixel';
 
 interface TimeSelectModalProps {
   visible: boolean;
@@ -87,11 +88,11 @@ const styles = StyleSheet.create({
     borderBottomColor: '#eee',
   },
   title: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(18),
     fontWeight: 'bold',
   },
   closeButton: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
     color: '#666',
   },
   timeList: {
@@ -106,7 +107,7 @@ const styles = StyleSheet.create({
     backgroundColor: '#eeeeee',
   },
   timeText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
     textAlign: 'center',
   },
   selectedTimeText: {

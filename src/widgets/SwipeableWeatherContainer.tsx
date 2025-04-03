@@ -7,6 +7,7 @@ import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import dayjs from 'dayjs';
 import CharacterWeatherDisplay from './CharacterWeatherDisplay';
+import {responsiveHeight} from '../app/style/responsivePixel';
 
 interface SwipeableWeatherContainerProps {
   currentWeather: CurWeather;
@@ -67,6 +68,10 @@ export default function SwipeableWeatherContainer({
     : null;
 
   const mainWeatherList = [currentWeather, targetWeather];
+  console.log(hourlyWeathers);
+  console.log(targetDate);
+  console.log(targetData);
+  console.log(mainWeatherList);
 
   return (
     <View style={styles.container}>
@@ -98,7 +103,7 @@ export default function SwipeableWeatherContainer({
 
 const styles = StyleSheet.create({
   container: {
-    height: 610,
+    height: responsiveHeight(610),
   },
   swiper: {},
   slide: {},

@@ -2,6 +2,10 @@ import React, {useMemo} from 'react';
 import NoData from './../../../assets/animation/noData.svg';
 import {StyleProp, Text, View, ViewStyle} from 'react-native';
 import LottieView from 'lottie-react-native';
+import {
+  responsiveFontSize,
+  responsiveScale,
+} from '../../../app/style/responsivePixel';
 
 // interface CharactorRenderer
 
@@ -31,31 +35,34 @@ export default function CharacterRenderer({
     switch (type) {
       case 2:
         return {
-          transform: [{scale: 1.6}],
+          transform: [{scale: responsiveScale(1.6)}],
         };
       case 3:
         return {
-          transform: [{scale: 1.3}],
+          transform: [{scale: responsiveScale(1.3)}],
         };
       case 4:
         return {
-          transform: [{scale: 2}, {translateX: 13}],
+          transform: [
+            {scale: responsiveScale(2)},
+            {translateX: responsiveFontSize(13)},
+          ],
         };
       case 5:
         return {
-          transform: [{scale: 1.6}],
+          transform: [{scale: responsiveScale(1.6)}],
         };
       case 6:
         return {
-          transform: [{scale: 1.3}],
+          transform: [{scale: responsiveScale(1.3)}],
         };
       case 7:
         return {
-          transform: [{scale: 1.1}],
+          transform: [{scale: responsiveScale(1.1)}],
         };
       case 8:
         return {
-          transform: [{scale: 1.1}],
+          transform: [{scale: responsiveScale(1.1)}],
         };
       default:
         return {};
@@ -77,7 +84,7 @@ export default function CharacterRenderer({
           height: '60%',
         }}
       />
-      <Text style={{fontSize: 30, textAlign: 'center'}}>
+      <Text style={{fontSize: responsiveFontSize(30), textAlign: 'center'}}>
         데이터가 없습니다.
       </Text>
     </View>

@@ -2,6 +2,10 @@ import {useNavigation, NavigationProp} from '@react-navigation/native';
 import React from 'react';
 import {Pressable, StyleSheet, Text, View} from 'react-native';
 import Swiper from 'react-native-swiper';
+import {
+  responsiveFontSize,
+  responsiveHeight,
+} from '../../../app/style/responsivePixel';
 
 type RootStackParamList = {
   Report: undefined;
@@ -21,7 +25,7 @@ function SimpleReportCard({
         flex: 1,
         backgroundColor: '#fff',
         borderRadius: 15,
-        height: 150,
+        height: responsiveHeight(150),
       }}
       onPress={() => navigation.navigate('Report')}>
       {reportTitles !== 'noReports' ? (
@@ -47,7 +51,7 @@ function SimpleReportCard({
 }
 const styles = StyleSheet.create({
   textBox: {flex: 1, justifyContent: 'center', alignItems: 'center'},
-  reportText: {fontSize: 20, textAlign: 'center'},
+  reportText: {fontSize: responsiveFontSize(20), textAlign: 'center'},
 });
 
 export default SimpleReportCard;

@@ -2,6 +2,10 @@ import React from 'react';
 import {Weather} from '../../../entitites/Weather';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import WeatherConditionRenderer from './WeatherConditionRenderer';
+import {
+  responsiveFontSize,
+  responsivePixel,
+} from '../../../app/style/responsivePixel';
 const CELSIUS = '℃';
 
 function RowHourlyWeathersView({
@@ -30,7 +34,7 @@ function RowHourlyWeathersView({
             condition={weather.condition}
             rain={weather.rain}
             light={+weather.time >= +sunRise && +weather.time < +sunSet}
-            size={30}
+            size={responsivePixel(30)}
           />
           <Text style={styles.scrollItemText}>
             {weather.temperature}
@@ -47,6 +51,6 @@ export default RowHourlyWeathersView;
 
 const styles = StyleSheet.create({
   scrollItemText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
   },
 });

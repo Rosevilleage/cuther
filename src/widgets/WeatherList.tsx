@@ -17,6 +17,10 @@ import Animated, {
   withTiming,
 } from 'react-native-reanimated';
 import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
+import {
+  responsiveFontSize,
+  responsivePixel,
+} from '../app/style/responsivePixel';
 
 type MixedDailyWeather = {
   [date: string]: {
@@ -144,7 +148,7 @@ function WeatherStack({
             marginBottom: 15,
             alignItems: 'center',
           }}>
-          <Text>
+          <Text style={styles.itemText}>
             {+mm}월 {dd}일
           </Text>
           {/* icon */}
@@ -160,14 +164,14 @@ function WeatherStack({
               condition={dailyWeathers.amCon}
               rain={0}
               light
-              size={35}
+              size={responsivePixel(35)}
             />
             <Text style={{fontSize: 30, color: 'lightgray'}}>|</Text>
             <WeatherConditionRenderer
               condition={dailyWeathers.amCon}
               rain={0}
               light
-              size={35}
+              size={responsivePixel(35)}
             />
           </View>
           {/* min max */}
@@ -177,12 +181,12 @@ function WeatherStack({
               alignItems: 'center',
               gap: 5,
             }}>
-            <Text>
+            <Text style={styles.itemText}>
               {dailyWeathers.min}
               {CELSIUS}
             </Text>
-            <Text>|</Text>
-            <Text>
+            <Text style={styles.itemText}>|</Text>
+            <Text style={styles.itemText}>
               {dailyWeathers.max}
               {CELSIUS}
             </Text>
@@ -246,10 +250,10 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   toggleButtonText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
   },
   itemText: {
-    fontSize: 18,
+    fontSize: responsiveFontSize(17),
     marginVertical: 5,
   },
   scrollView: {
@@ -262,6 +266,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   scrollItemText: {
-    fontSize: 16,
+    fontSize: responsiveFontSize(16),
   },
 });
