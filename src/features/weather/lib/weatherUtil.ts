@@ -172,3 +172,8 @@ export function getMidWeatherStatus(condition: MidCondition) {
       return 'cloud';
   }
 }
+
+export function getCurrentWeatherTime(baseTime: BaseTime) {
+  const currentTime = `${baseTime.slice(0, 3)}0` as BaseTime;
+  return currentTime;
+}

@@ -17,7 +17,10 @@ import {
   useGeoLocation,
 } from '../../features/geoLocation/model/geoLocationStore';
 import dayjs from 'dayjs';
-import {roundToNearestBaseTime} from '../../features/weather/lib/weatherUtil';
+import {
+  getCurrentWeatherTime,
+  roundToNearestBaseTime,
+} from '../../features/weather/lib/weatherUtil';
 import {BaseDate, BaseTime} from '../../features/weather/model/weatherDTO';
 import SimpleReportView from '../../widgets/SimpleReportView';
 import {
@@ -40,7 +43,14 @@ export default function MainScreen() {
     data: currentWeather,
     // isError: isNowWeatherError,
     // isLoading: isNowWeatherLoading,
-  } = useQuery(nowWeatherQueryOption({base_date, base_time, nx, ny}));
+  } = useQuery(
+    nowWeatherQueryOption({
+      base_date,
+      base_time: getCurrentWeatherTime(base_time),
+      nx,
+      ny,
+    }),
+  );
   const {
     data: hourlyWeathers,
     // isError: isHourlyWeatherError,
