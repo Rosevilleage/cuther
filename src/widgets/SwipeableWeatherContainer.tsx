@@ -29,7 +29,6 @@ export default function SwipeableWeatherContainer({
         if (savedDate) {
           setSelectedTime(savedDate);
         }
-      } catch (error) {
         setSelectedTime(
           dayjs()
             .add(6, 'hours')
@@ -38,6 +37,8 @@ export default function SwipeableWeatherContainer({
             .millisecond(0)
             .format('HHmm'),
         );
+      } catch (error) {
+        console.log((error as Error).message + '\n' + 'Time select error');
       }
     }, 1000);
     return () => {
@@ -68,10 +69,6 @@ export default function SwipeableWeatherContainer({
     : null;
 
   const mainWeatherList = [currentWeather, targetWeather];
-  console.log(hourlyWeathers);
-  console.log(targetDate);
-  console.log(targetData);
-  console.log(mainWeatherList);
 
   return (
     <View style={styles.container}>
