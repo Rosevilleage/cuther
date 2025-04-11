@@ -45,7 +45,8 @@ export const hourlyQueryOption = (hourlyWeatherParams: WeatherQueryParams) => {
       ).then(res => res.data.response),
     select(data) {
       if (data.header.resultCode !== '00') {
-        throw new Error(`api error: ${data.header.resultMsg}`);
+        const errorMessage = `${data.header.resultCode} hourly api error: ${data.header.resultMsg}`;
+        throw new Error(errorMessage);
       }
 
       return vilageFcstDTOToWeathers(data.body.items.item);
@@ -68,7 +69,8 @@ export const nowWeatherQueryOption = (nowWeatherParams: WeatherQueryParams) => {
     staleTime: 0,
     select(data) {
       if (data.header.resultCode !== '00') {
-        throw new Error(`api error: ${data.header.resultMsg}`);
+        const errorMessage = `${data.header.resultCode} now weather api error: ${data.header.resultMsg}`;
+        throw new Error(errorMessage);
       }
       return ncstDTOToCurrentWeather(data.body.items.item);
     },
@@ -87,7 +89,8 @@ export const sunRiseSetQueryOption = (
       getSunRiseSet(base_date, lat, lng).then(res => res.data.response),
     select(data): [string, string] {
       if (data.header.resultCode !== '00') {
-        throw new Error(`api error: ${data.header.resultMsg}`);
+        const errorMessage = `${data.header.resultCode} sunRiseSet api error: ${data.header.resultMsg}`;
+        throw new Error(errorMessage);
       }
       return [
         data.body.items.item.sunrise.trim(),
@@ -104,7 +107,8 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
     queryFn: () => getMidConditions(regId, tmFc).then(res => res.data.response),
     select(data) {
       if (data.header.resultCode !== '00') {
-        throw new Error(`api error: ${data.header.resultMsg}`);
+        const errorMessage = `${data.header.resultCode} daily condition api error: ${data.header.resultMsg}`;
+        throw new Error(errorMessage);
       }
 
       const result: {
@@ -157,7 +161,8 @@ export const dailyTemperatureQueryOption = (
     },
     select(data) {
       if (data.header.resultCode !== '00') {
-        throw new Error(`api error: ${data.header.resultMsg}`);
+        const errorMessage = `${data.header.resultCode} daily temperature api error: ${data.header.resultMsg}`;
+        throw new Error(errorMessage);
       }
 
       const result: {

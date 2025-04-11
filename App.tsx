@@ -11,7 +11,11 @@ import Geolocation from 'react-native-geolocation-service';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import {enableScreens} from 'react-native-screens';
-import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
+import {
+  QueryCache,
+  QueryClient,
+  QueryClientProvider,
+} from '@tanstack/react-query';
 import {PERMISSIONS, request, RESULTS} from 'react-native-permissions';
 
 import {getGeoLocation} from './src/features/geoLocation/api/geoLocationApi';
@@ -25,9 +29,21 @@ const queryClient = new QueryClient({
   defaultOptions: {
     queries: {
       staleTime: 5 * 60 * 1000,
-      retry: 0,
+      retry: (failureCount, error) => {
+        if (error.message.slice(0, 2) === '03') {
+          return failureCount < 2;
+        }
+        return false;
+      },
     },
   },
+  queryCache: new QueryCache({
+    onError: (error: unknown) => {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(error);
+      }
+    },
+  }),
 });
 
 function App(): React.JSX.Element {
@@ -75,6 +91,7 @@ function App(): React.JSX.Element {
 
     requestLocationPermission();
   }, [setLatLng, setRegion, setXY]);
+
   return (
     <QueryClientProvider client={queryClient}>
       <SafeAreaProvider>
