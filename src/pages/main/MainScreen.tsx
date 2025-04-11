@@ -31,19 +31,16 @@ import {DailyWeathers} from '../../entitites/Weather';
 import {MidTaRegId} from '../../features/geoLocation/lib/geoLocationUtils';
 import SwipeableWeatherContainer from '../../widgets/SwipeableWeatherContainer';
 
+const INITIAL_SUNRISESET: [string, string] = ['0600', '1800'];
+
 export default function MainScreen() {
   const {nx, ny, lat, lng, regId, midTaRegId, stnId} = useGeoLocation();
   const base_date = dayjs().format('YYYYMMDD') as BaseDate;
   const base_time = dayjs().format('HHmm') as BaseTime;
   const hourlyDate = roundToNearestBaseTime(base_date, base_time);
-
   const {width, height} = useWindowDimensions();
 
-  const {
-    data: currentWeather,
-    // isError: isNowWeatherError,
-    // isLoading: isNowWeatherLoading,
-  } = useQuery(
+  const {data: currentWeather, isLoading: isNowWeatherLoading} = useQuery(
     nowWeatherQueryOption({
       base_date,
       base_time: getCurrentWeatherTime(base_time),
@@ -51,11 +48,8 @@ export default function MainScreen() {
       ny,
     }),
   );
-  const {
-    data: hourlyWeathers,
-    // isError: isHourlyWeatherError,
-    // isLoading: isHourlyWeatherLoisLoading,
-  } = useQuery(
+
+  const {data: hourlyWeathers, isLoading: isHourlyWeatherLoading} = useQuery(
     hourlyQueryOption({
       base_date: hourlyDate.baseDate,
       base_time: hourlyDate.baseTime,
@@ -63,26 +57,21 @@ export default function MainScreen() {
       ny,
     }),
   );
-  const {
-    data: sunRiseSet,
-    // isError: isRiseSetError,
-    // isLoading: isRiseSetLoisLoading,
-  } = useQuery(sunRiseSetQueryOption(base_date, lat, lng));
+  const {data: sunRiseSet, isLoading: isRiseSetLoading} = useQuery(
+    sunRiseSetQueryOption(base_date, lat, lng),
+  );
   const tmFc =
     +base_time < 610
       ? `${dayjs(base_date).subtract(1, 'days').format('YYYYMMDD')}1800`
       : +base_time < 1810
       ? `${base_date}0600`
       : `${base_date}1800`;
-  const {
-    data: dailyConditions,
-    // isError: dailyWeatherIsError,
-    // isLoading: dailyWeatherIsLoading,
-  } = useQuery(dailyConditionQueryOption(regId as RegId, tmFc));
-
-  const {data: dailyTemperature} = useQuery(
-    dailyTemperatureQueryOption(midTaRegId as MidTaRegId, tmFc),
+  const {data: dailyConditions, isLoading: isDailyConditionLoading} = useQuery(
+    dailyConditionQueryOption(regId as RegId, tmFc),
   );
+
+  const {data: dailyTemperature, isLoading: isDailyTemperatureLoading} =
+    useQuery(dailyTemperatureQueryOption(midTaRegId as MidTaRegId, tmFc));
 
   const dailyWeathers: DailyWeathers[] | undefined =
     dailyConditions && dailyTemperature
@@ -94,43 +83,52 @@ export default function MainScreen() {
         })
       : undefined;
 
-  const {data: sepcialReports} = useQuery(
+  const {data: sepcialReports, isLoading: isSpecialReportLoading} = useQuery(
     specialReportQueryOption(stnId as number),
   );
-  const {data: preReports} = useQuery(preReportQueryOption(stnId as number));
+  const {data: preReports, isLoading: isPreReportLoading} = useQuery(
+    preReportQueryOption(stnId as number),
+  );
+
+  const isLoading =
+    isNowWeatherLoading ||
+    isHourlyWeatherLoading ||
+    isRiseSetLoading ||
+    isDailyConditionLoading ||
+    isDailyTemperatureLoading ||
+    isSpecialReportLoading ||
+    isPreReportLoading;
+
   return (
     <ScrollView style={{width, height}}>
       <View style={{flex: 1, padding: 10, gap: 15}}>
         {/* 날씨 표시 */}
-        {currentWeather && sunRiseSet && hourlyWeathers && (
-          <SwipeableWeatherContainer
-            currentWeather={currentWeather}
-            hourlyWeathers={hourlyWeathers}
-            sunRiseSet={sunRiseSet}
-          />
-        )}
+        <SwipeableWeatherContainer
+          currentWeather={currentWeather || null}
+          hourlyWeathers={hourlyWeathers || {}}
+          sunRiseSet={sunRiseSet || INITIAL_SUNRISESET}
+          isLoading={isLoading}
+        />
         {/* 시간별 날씨 */}
-        {hourlyWeathers && sunRiseSet && (
-          <TodayHourlyWeathers
-            weathers={hourlyWeathers}
-            sunRiseSet={sunRiseSet}
-          />
-        )}
+        <TodayHourlyWeathers
+          weathers={hourlyWeathers || {}}
+          sunRiseSet={sunRiseSet || INITIAL_SUNRISESET}
+          isLoading={isLoading}
+        />
         {/* 특보 */}
-        {sepcialReports && preReports && (
-          <SimpleReportView
-            specialReports={sepcialReports}
-            preReports={preReports}
-          />
-        )}
+        <SimpleReportView
+          specialReports={sepcialReports || []}
+          preReports={preReports || []}
+          isLoading={isLoading}
+        />
         {/* 단기 */}
-        {hourlyWeathers && sunRiseSet && dailyWeathers && (
-          <WeatherList
-            hourlyWeathers={hourlyWeathers}
-            dailyWeathers={dailyWeathers}
-            sunRiseSet={sunRiseSet}
-          />
-        )}
+
+        <WeatherList
+          hourlyWeathers={hourlyWeathers || {}}
+          dailyWeathers={dailyWeathers || []}
+          sunRiseSet={sunRiseSet || INITIAL_SUNRISESET}
+          isLoading={isLoading}
+        />
       </View>
     </ScrollView>
   );

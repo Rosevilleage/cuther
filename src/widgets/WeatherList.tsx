@@ -19,8 +19,10 @@ import Animated, {
 import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
 import {
   responsiveFontSize,
+  responsiveHeight,
   responsivePixel,
 } from '../app/style/responsivePixel';
+import Skeleton from '../app/components/Skeleton';
 
 type MixedDailyWeather = {
   [date: string]: {
@@ -38,38 +40,38 @@ export default function WeatherList({
   hourlyWeathers,
   dailyWeathers,
   sunRiseSet,
+  isLoading,
 }: {
   hourlyWeathers: HourlyWeathers;
   dailyWeathers: DailyWeathers[];
   sunRiseSet: [string, string];
+  isLoading: boolean;
 }) {
   const [openItemId, setOpenItemId] = useState<number | null>(null);
   const weathers: MixedDailyWeather = {};
+  const hourlyWeatherList = Object.entries(hourlyWeathers);
+  hourlyWeatherList.slice(1, -1).forEach(([date, data]) => {
+    const subMin = Math.min(
+      ...data.weathers.map(({temperature}) => temperature),
+    );
+    const subMax = Math.max(
+      ...data.weathers.map(({temperature}) => temperature),
+    );
+    const amWeather = data.weathers
+      .filter(({time}) => +sunRiseSet[0] <= +time && +time < 1200)
+      .sort((a, b) => a.temperature - b.temperature)[0];
+    const pmWeather = data.weathers
+      .filter(({time}) => +time >= 12 && +time < +sunRiseSet[1])
+      .sort((a, b) => b.temperature - a.temperature)[0];
 
-  Object.entries(hourlyWeathers)
-    .slice(1, -1)
-    .forEach(([date, data]) => {
-      const subMin = Math.min(
-        ...data.weathers.map(({temperature}) => temperature),
-      );
-      const subMax = Math.max(
-        ...data.weathers.map(({temperature}) => temperature),
-      );
-      const amWeather = data.weathers
-        .filter(({time}) => +sunRiseSet[0] <= +time && +time < 1200)
-        .sort((a, b) => a.temperature - b.temperature)[0];
-      const pmWeather = data.weathers
-        .filter(({time}) => +time >= 12 && +time < +sunRiseSet[1])
-        .sort((a, b) => b.temperature - a.temperature)[0];
-
-      weathers[date] = {
-        amCon: genWeatherStatus(amWeather.condition, amWeather.rain),
-        pmCon: genWeatherStatus(pmWeather.condition, pmWeather.rain),
-        min: data.min ?? subMin,
-        max: data.max ?? subMax,
-        hourly: data.weathers,
-      };
-    });
+    weathers[date] = {
+      amCon: genWeatherStatus(amWeather.condition, amWeather.rain),
+      pmCon: genWeatherStatus(pmWeather.condition, pmWeather.rain),
+      min: data.min ?? subMin,
+      max: data.max ?? subMax,
+      hourly: data.weathers,
+    };
+  });
 
   dailyWeathers.forEach(({date, amCon, pmCon, max, min}) => {
     if (!weathers[date]) {
@@ -89,7 +91,24 @@ export default function WeatherList({
       };
     }
   });
-
+  if (isLoading) {
+    return (
+      <View style={styles.container}>
+        <FlatList
+          data={Array.from({length: 8}, (_, index) => index)}
+          renderItem={() => <WeatherStackSkeletonUI />}
+          scrollEnabled={false}
+        />
+      </View>
+    );
+  }
+  if (
+    !Object.entries(weathers).length ||
+    !hourlyWeatherList.length ||
+    !dailyWeathers.length
+  ) {
+    return null;
+  }
   return (
     <View style={styles.container}>
       <FlatList
@@ -224,6 +243,50 @@ function WeatherStack({
           </View>
         </Animated.View>
       )}
+    </View>
+  );
+}
+
+function WeatherStackSkeletonUI() {
+  return (
+    <View
+      style={{
+        flex: 1,
+        flexDirection: 'row',
+        gap: 10,
+        alignItems: 'center',
+        padding: 10,
+      }}>
+      <Skeleton
+        width={responsivePixel(50)}
+        height={responsiveHeight(40)}
+        borderRadius={5}
+      />
+      <View
+        style={{
+          flexDirection: 'row',
+          gap: 10,
+          flex: 1,
+          justifyContent: 'center',
+        }}>
+        <Skeleton
+          width={responsivePixel(50)}
+          height={responsiveHeight(50)}
+          borderRadius={20}
+        />
+        <Text style={{fontSize: 30, color: 'lightgray'}}>|</Text>
+
+        <Skeleton
+          width={responsivePixel(50)}
+          height={responsiveHeight(50)}
+          borderRadius={20}
+        />
+      </View>
+      <Skeleton
+        width={responsivePixel(100)}
+        height={responsiveHeight(40)}
+        borderRadius={5}
+      />
     </View>
   );
 }

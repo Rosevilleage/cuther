@@ -1,42 +1,44 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
-
+import dayjs from 'dayjs';
+import {
+  responsivePixel,
+  responsiveFontSize,
+} from '../app/style/responsivePixel';
+import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
 import CharacterRenderer from '../features/weather/ui/CharacterRenderer';
 import {perceivedTemperatureToLevel} from '../features/weather/lib/weatherUtil';
-import dayjs from 'dayjs';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
 import {CurWeather} from '../entitites/Weather';
-import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
-import TimeSelectModal from '../features/weather/ui/TimeSelectModal';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import {
-  responsiveFontSize,
-  responsiveHeight,
-} from '../app/style/responsivePixel';
+import TimeSelectModal from '../features/weather/ui/TimeSelectModal';
 
 export default function CharacterWeatherDisplay({
   currentWeather,
-  sunRiseSet,
-  condition,
   selectedDate,
   setSelectedDate,
+  sunRiseSet,
+  condition,
 }: {
   currentWeather: CurWeather | null;
-  sunRiseSet: [string, string];
-  condition: number;
   selectedDate?: string;
   setSelectedDate?: React.Dispatch<React.SetStateAction<string>>;
+  sunRiseSet: [string, string];
+  condition: number;
 }) {
   const [isOpen, setIsOpen] = useState(false);
   const region = useGeoLocation(state => state.region);
+
   if (!currentWeather) {
     return null;
   }
+
   const [sunRise, sunSet] = sunRiseSet;
   const perceivedTempLevel = perceivedTemperatureToLevel(
     currentWeather.perceivedTemperature,
   );
   const base_time = dayjs().format('HHmm');
+
   const handleTimeSelect = (hour: number) => {
     if (selectedDate && selectedDate !== '' && setSelectedDate) {
       const newDate = dayjs()
@@ -49,6 +51,7 @@ export default function CharacterWeatherDisplay({
       AsyncStorage.setItem('selectedWeatherDate', newDate);
     }
   };
+
   return (
     <View style={styles.mainsection}>
       <View style={selectedDate ? styles.dateContainer : {marginBottom: 45}}>
@@ -91,7 +94,7 @@ export default function CharacterWeatherDisplay({
       </View>
       <View
         style={{
-          height: responsiveHeight(400),
+          height: responsivePixel(400),
           overflow: 'hidden',
         }}>
         <CharacterRenderer type={perceivedTempLevel} loop autoPlay />
@@ -158,7 +161,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainsection: {
-    height: responsiveHeight(600),
+    height: responsivePixel(600),
     backgroundColor: 'white',
     borderRadius: 15,
   },
