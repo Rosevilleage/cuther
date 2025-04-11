@@ -2,17 +2,6 @@ import dayjs from 'dayjs';
 import {BaseDate, BaseTime, MidCondition} from '../model/weatherDTO';
 import {Weather, WeatherCondition} from '../../../entitites/Weather';
 
-const baseTimes = [
-  '0200',
-  '0500',
-  '0800',
-  '1100',
-  '1400',
-  '1700',
-  '2000',
-  '2300',
-] as const;
-
 export function roundToNearestBaseTime(
   baseDate: BaseDate,
   baseTime: BaseTime,
@@ -23,20 +12,33 @@ export function roundToNearestBaseTime(
     );
   }
 
-  const hour = +baseTime.slice(0, 2) * 100;
+  const time = +baseTime;
 
-  for (let i = baseTimes.length - 1; i >= 0; i--) {
-    if (hour >= +baseTimes[i]) {
-      return {baseDate, baseTime: baseTimes[i]};
-    }
+  let baseTimeResult: BaseTime;
+
+  if (time > 2130) {
+    baseTimeResult = '2000';
+  } else if (time > 1830) {
+    baseTimeResult = '1700';
+  } else if (time > 1530) {
+    baseTimeResult = '1400';
+  } else if (time > 1230) {
+    baseTimeResult = '1100';
+  } else if (time > 930) {
+    baseTimeResult = '0800';
+  } else if (time > 630) {
+    baseTimeResult = '0500';
+  } else if (time > 330) {
+    baseTimeResult = '0200';
+  } else {
+    const prevDate = dayjs(baseDate, 'YYYYMMDD')
+      .subtract(1, 'day')
+      .format('YYYYMMDD') as BaseDate;
+
+    return {baseDate: prevDate, baseTime: '2300'};
   }
 
-  // 하루 전날 계산
-  const prevDate = dayjs(baseDate, 'YYYYMMDD')
-    .subtract(1, 'day')
-    .format('YYYYMMDD') as BaseDate;
-
-  return {baseDate: prevDate, baseTime: baseTimes[baseTimes.length - 1]};
+  return {baseDate, baseTime: baseTimeResult};
 }
 
 export function calculatePerceivedTemperature(
