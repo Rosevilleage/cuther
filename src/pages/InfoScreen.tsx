@@ -81,6 +81,7 @@ export default function InfoScreen() {
         visible={isPrivacyModalVisible}
         onClose={() => setIsPrivacyModalVisible(false)}
         title="개인정보 제3자 제공 동의">
+        {/* 개인정보 제3자 제공 동의 내용 생성 후 수정 */}
         <View style={styles.modalContent}>
           <Text style={styles.modalText}>
             본 앱은 다음과 같은 제3자에게 개인정보를 제공합니다:
@@ -89,7 +90,7 @@ export default function InfoScreen() {
             • 기상청: 날씨 정보 제공을 위해 위치 정보를 제공합니다.
           </Text>
           <Text style={styles.modalText}>
-            • Google Analytics: 앱 사용 통계를 위해 사용 데이터를 제공합니다.
+            • Naver Map: 날씨 정보 제공을 위해 위치 정보를 제공합니다.
           </Text>
           <Text style={styles.modalText}>
             제공되는 정보는 해당 서비스 제공 목적에만 사용되며, 사용자의 동의
