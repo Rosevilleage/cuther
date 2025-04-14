@@ -4,6 +4,7 @@ import {
   createDrawerNavigator,
   DrawerToggleButton,
 } from '@react-navigation/drawer';
+import InfoScreen from '../../pages/InfoScreen';
 
 const MainDrawer = createDrawerNavigator();
 export default function MainDrawerNavigation() {
@@ -17,6 +18,7 @@ export default function MainDrawerNavigation() {
         headerRight: DrawerToggleButton,
       }}>
       <MainDrawer.Screen name="Home" component={MainScreen} />
+      <MainDrawer.Screen name="Info" component={InfoScreen} />
     </MainDrawer.Navigator>
   );
 }
