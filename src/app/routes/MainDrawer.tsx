@@ -5,6 +5,7 @@ import {
   DrawerToggleButton,
 } from '@react-navigation/drawer';
 import InfoScreen from '../../pages/InfoScreen';
+import {responsivePixel} from '../style/responsivePixel';
 
 const MainDrawer = createDrawerNavigator();
 export default function MainDrawerNavigation() {
@@ -16,9 +17,37 @@ export default function MainDrawerNavigation() {
         drawerPosition: 'right',
         headerLeft: () => undefined,
         headerRight: DrawerToggleButton,
+        drawerStyle: {
+          width: '70%',
+          backgroundColor: '#f5f5f5',
+        },
+        drawerItemStyle: {
+          paddingVertical: responsivePixel(5),
+          paddingHorizontal: responsivePixel(16),
+          borderRadius: responsivePixel(8),
+          marginVertical: responsivePixel(4),
+        },
+        drawerActiveTintColor: '#040404',
+        drawerInactiveTintColor: '#636363',
+        drawerLabelStyle: {
+          fontSize: responsivePixel(16),
+          fontWeight: '600',
+        },
       }}>
-      <MainDrawer.Screen name="Home" component={MainScreen} />
-      <MainDrawer.Screen name="Info" component={InfoScreen} />
+      <MainDrawer.Screen
+        name="Home"
+        component={MainScreen}
+        options={{
+          title: '홈',
+        }}
+      />
+      <MainDrawer.Screen
+        name="Info"
+        component={InfoScreen}
+        options={{
+          title: '앱 정보',
+        }}
+      />
     </MainDrawer.Navigator>
   );
 }
