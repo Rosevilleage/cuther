@@ -1,6 +1,6 @@
 import React, {useMemo} from 'react';
 import NoData from './../../../assets/animation/noData.svg';
-import {StyleProp, Text, View, ViewStyle} from 'react-native';
+import {StyleProp, View, ViewStyle} from 'react-native';
 import LottieView from 'lottie-react-native';
 import {
   responsiveFontSize,
@@ -25,13 +25,15 @@ export default function CharacterRenderer({
   type,
   loop,
   autoPlay,
+  style,
 }: {
   type: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 0;
   loop?: boolean;
   autoPlay?: boolean;
+  style?: StyleProp<ViewStyle>;
 }) {
   // {height: size === 'lage' ? 320 : size === 'medium' ? 250 : 150};
-  const style: StyleProp<ViewStyle> = useMemo(() => {
+  const defaultStyle: StyleProp<ViewStyle> = useMemo(() => {
     switch (type) {
       case 2:
         return {
@@ -74,19 +76,19 @@ export default function CharacterRenderer({
         loop={loop}
         autoPlay={autoPlay}
         source={charactors[type].src}
-        style={[style, {flex: 1}]}
+        style={[style, defaultStyle, {flex: 1}]}
       />
     </View>
   ) : (
     <View style={{gap: 10, flex: 1, justifyContent: 'center'}}>
       <NoData
-        style={{
-          height: '60%',
-        }}
+        style={[
+          {
+            height: '60%',
+          },
+          style,
+        ]}
       />
-      <Text style={{fontSize: responsiveFontSize(30), textAlign: 'center'}}>
-        데이터가 없습니다.
-      </Text>
     </View>
   );
 }
