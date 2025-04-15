@@ -8,15 +8,17 @@ import {
 } from '../../../app/style/responsivePixel';
 const CELSIUS = '℃';
 
-function RowHourlyWeathersView({
-  hourlyWeathers,
-  sunRiseSet,
-  day,
-}: {
+interface RowHourlyWeathersViewProps {
   hourlyWeathers: Weather[];
   sunRiseSet: [string, string];
   day: string;
-}) {
+}
+
+const RowHourlyWeathersView: React.FC<RowHourlyWeathersViewProps> = ({
+  hourlyWeathers,
+  sunRiseSet,
+  day,
+}) => {
   const [sunRise, sunSet] = sunRiseSet;
   return (
     <FlatList
@@ -45,7 +47,7 @@ function RowHourlyWeathersView({
       showsHorizontalScrollIndicator={false}
     />
   );
-}
+};
 
 export default RowHourlyWeathersView;
 

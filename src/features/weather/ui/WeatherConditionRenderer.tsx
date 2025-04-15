@@ -11,17 +11,19 @@ import RainSnow from './../../../assets/icons/svg/rainSnow_icon.svg';
 import {WeatherCondition} from '../../../entitites/Weather';
 // import Thunder from './../../../assets/icons/svg/thunder_icon.svg';
 
-export default function WeatherConditionRenderer({
-  condition,
-  rain,
-  light,
-  size,
-}: {
+interface WeatherConditionRendererProps {
   condition: number | WeatherCondition;
   rain: number;
   light: boolean;
   size: number;
-}) {
+}
+
+const WeatherConditionRenderer: React.FC<WeatherConditionRendererProps> = ({
+  condition,
+  rain,
+  light,
+  size,
+}) => {
   const status =
     typeof condition === 'number'
       ? genWeatherStatus(condition, rain)
@@ -49,4 +51,6 @@ export default function WeatherConditionRenderer({
     return <RainSnow width={size} height={size} />;
   }
   return <Cloud width={size} height={size} />;
-}
+};
+
+export default WeatherConditionRenderer;

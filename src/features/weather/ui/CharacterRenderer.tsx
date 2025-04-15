@@ -9,7 +9,7 @@ import {
 
 // interface CharactorRenderer
 
-const charactors = {
+const characters = {
   0: {src: ''},
   1: {src: require('./../../../assets/animation/Circulator.json')},
   2: {src: require('./../../../assets/animation/lev-char-half.json')},
@@ -21,18 +21,19 @@ const charactors = {
   8: {src: require('./../../../assets/animation/cold.json')},
 };
 
-export default function CharacterRenderer({
-  type,
-  loop,
-  autoPlay,
-  style,
-}: {
+interface CharacterRendererProps {
   type: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 0;
   loop?: boolean;
   autoPlay?: boolean;
   style?: StyleProp<ViewStyle>;
-}) {
-  // {height: size === 'lage' ? 320 : size === 'medium' ? 250 : 150};
+}
+
+const CharacterRenderer: React.FC<CharacterRendererProps> = ({
+  type,
+  loop,
+  autoPlay,
+  style,
+}) => {
   const defaultStyle: StyleProp<ViewStyle> = useMemo(() => {
     switch (type) {
       case 2:
@@ -75,7 +76,7 @@ export default function CharacterRenderer({
       <LottieView
         loop={loop}
         autoPlay={autoPlay}
-        source={charactors[type].src}
+        source={characters[type].src}
         style={[style, defaultStyle, {flex: 1}]}
       />
     </View>
@@ -91,4 +92,6 @@ export default function CharacterRenderer({
       />
     </View>
   );
-}
+};
+
+export default CharacterRenderer;

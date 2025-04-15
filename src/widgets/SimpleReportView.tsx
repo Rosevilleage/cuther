@@ -6,7 +6,7 @@ import {PreReport, SpecialReport} from '../entitites/specialReports';
 import {responsiveHeight, responsivePixel} from '../app/style/responsivePixel';
 import Skeleton from '../app/components/Skeleton';
 
-function SimpleReportView({
+export default function SimpleReportView({
   specialReports,
   preReports,
   isLoading,
@@ -63,8 +63,6 @@ function RenderReportSkeleton() {
     </View>
   );
 }
-
-export default SimpleReportView;
 
 const styles = StyleSheet.create({
   skeletonContainer: {

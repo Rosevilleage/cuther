@@ -16,12 +16,12 @@ interface TimeSelectModalProps {
   currentHour?: number;
 }
 
-export default function TimeSelectModal({
+const TimeSelectModal: React.FC<TimeSelectModalProps> = ({
   visible,
   onClose,
   onSelect,
   currentHour,
-}: TimeSelectModalProps) {
+}) => {
   const hours = Array.from({length: 24}, (_, i) => i);
 
   return (
@@ -64,7 +64,9 @@ export default function TimeSelectModal({
       </View>
     </Modal>
   );
-}
+};
+
+export default TimeSelectModal;
 
 const styles = StyleSheet.create({
   modalOverlay: {

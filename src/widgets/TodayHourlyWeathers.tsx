@@ -9,7 +9,7 @@ import {
 } from '../app/style/responsivePixel';
 import Skeleton from '../app/components/Skeleton';
 
-function TodayHourlyWeathers({
+export default function TodayHourlyWeathers({
   weathers,
   sunRiseSet,
   isLoading,
@@ -55,8 +55,6 @@ function TodayHourlyWeathers({
     </View>
   );
 }
-
-export default TodayHourlyWeathers;
 
 function RenderTodayHourlySkeletonUI() {
   return (
