@@ -9,7 +9,7 @@ import NetInfo from '@react-native-community/netinfo';
 import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
 import {responsivePixel} from '../style/responsivePixel';
 import NoData from './../../assets/animation/noData.svg';
-
+import {useQueryClient} from '@tanstack/react-query';
 interface NetworkContextType {
   isConnected: boolean;
   setIsConnected: (value: boolean) => void;
@@ -22,7 +22,31 @@ const NetworkContext = createContext<NetworkContextType>({
 
 export const useNetwork = () => useContext(NetworkContext);
 
-const NoNetwork = () => {
+const NetworkProvider: React.FC<{children: React.ReactNode}> = ({children}) => {
+  const [isConnected, setIsConnected] = useState(true);
+  const queryClient = useQueryClient();
+  useEffect(() => {
+    const unsubscribe = NetInfo.addEventListener(state => {
+      setIsConnected(state.isConnected ?? false);
+    });
+
+    return () => {
+      unsubscribe();
+    };
+  }, []);
+
+  if (!isConnected) {
+    return <NoNetwork retry={() => queryClient.removeQueries()} />;
+  }
+
+  return (
+    <NetworkContext.Provider value={{isConnected, setIsConnected}}>
+      {children}
+    </NetworkContext.Provider>
+  );
+};
+
+const NoNetwork = ({retry}: {retry: () => void}) => {
   const [isChecking, setIsChecking] = useState(false);
   const {setIsConnected} = useNetwork();
   const checkConnection = useCallback(async () => {
@@ -35,11 +59,12 @@ const NoNetwork = () => {
       const state = await NetInfo.fetch();
       if (state.isConnected) {
         setIsConnected(true);
+        retry();
       }
     } finally {
       setIsChecking(false);
     }
-  }, [isChecking, setIsConnected]);
+  }, [isChecking, retry, setIsConnected]);
 
   return (
     <View style={styles.container}>
@@ -59,32 +84,6 @@ const NoNetwork = () => {
         </Text>
       </TouchableOpacity>
     </View>
-  );
-};
-
-export const NetworkProvider: React.FC<{children: React.ReactNode}> = ({
-  children,
-}) => {
-  const [isConnected, setIsConnected] = useState(true);
-
-  useEffect(() => {
-    const unsubscribe = NetInfo.addEventListener(state => {
-      setIsConnected(state.isConnected ?? false);
-    });
-
-    return () => {
-      unsubscribe();
-    };
-  }, []);
-
-  if (!isConnected) {
-    return <NoNetwork />;
-  }
-
-  return (
-    <NetworkContext.Provider value={{isConnected, setIsConnected}}>
-      {children}
-    </NetworkContext.Provider>
   );
 };
 
@@ -120,3 +119,5 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
   },
 });
+
+export default NetworkProvider;

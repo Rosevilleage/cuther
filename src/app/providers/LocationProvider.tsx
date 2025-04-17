@@ -8,12 +8,14 @@ import {getXYConv} from '../../features/geoLocation/lib/geoLocationUtils';
 import {useGeoLocation} from '../../features/geoLocation/model/geoLocationStore';
 import {responsivePixel} from '../style/responsivePixel';
 import NoData from './../../assets/animation/noData.svg';
-
+import {useQueryClient} from '@tanstack/react-query';
 interface LocationProviderProps {
   children: React.ReactNode;
 }
 
 const LocationProvider: React.FC<LocationProviderProps> = ({children}) => {
+  const queryClient = useQueryClient();
+
   const [isAlertVisible, setIsAlertVisible] = useState<{
     visible: boolean;
     title: string;
@@ -80,7 +82,10 @@ const LocationProvider: React.FC<LocationProviderProps> = ({children}) => {
         <ErrorPage
           title={isAlertVisible.title}
           message={isAlertVisible.message}
-          retry={() => setIsAlertVisible(null)}
+          retry={() => {
+            setIsAlertVisible(null);
+            queryClient.removeQueries();
+          }}
         />
       </View>
     );
