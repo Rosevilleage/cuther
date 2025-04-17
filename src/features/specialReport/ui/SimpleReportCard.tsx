@@ -19,6 +19,9 @@ function SimpleReportCard({
   emptyTitle: string;
 }) {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  if (reportTitles.length === 0) {
+    return null;
+  }
   return (
     <Pressable
       style={{
