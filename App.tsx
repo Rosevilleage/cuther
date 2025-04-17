@@ -13,9 +13,10 @@ import {
 } from '@tanstack/react-query';
 import {GestureHandlerRootView} from 'react-native-gesture-handler';
 import {NetworkProvider} from './src/app/providers/NetworkProvider';
-import Navigation from './src/app/navigation';
+import Navigation from './src/app/routes/navigation';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 import LocationProvider from './src/app/providers/LocationProvider';
+import {PrivacyConsentProvider} from './src/app/providers/PrivacyConsentProvider';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -44,9 +45,11 @@ const App = () => {
       <GestureHandlerRootView style={{flex: 1}}>
         <SafeAreaProvider>
           <NetworkProvider>
-            <LocationProvider>
-              <Navigation />
-            </LocationProvider>
+            <PrivacyConsentProvider>
+              <LocationProvider>
+                <Navigation />
+              </LocationProvider>
+            </PrivacyConsentProvider>
           </NetworkProvider>
         </SafeAreaProvider>
       </GestureHandlerRootView>
