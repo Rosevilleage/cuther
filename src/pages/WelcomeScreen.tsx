@@ -1,5 +1,5 @@
 import React from 'react';
-import {View, Text, StyleSheet, TouchableOpacity} from 'react-native';
+import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
 import Swiper from 'react-native-swiper';
 import CharacterRenderer from '../features/weather/ui/CharacterRenderer';
 import {responsivePixel} from '../app/style/responsivePixel';
@@ -48,7 +48,11 @@ export default function InitScreen() {
       <View style={styles.buttonContainer}>
         <Text style={styles.buttonText}>
           {NOTIFICATION_DESCRIPTION_1}
-          <TouchableOpacity onPress={() => {}}>
+          <TouchableOpacity
+            onPress={() => {
+              // 개인정보 처리방침 페이지 생성 후 적용
+              Linking.openURL('');
+            }}>
             <Text style={styles.policyText}>{POLICY_TEXT}</Text>
           </TouchableOpacity>
           {NOTIFICATION_DESCRIPTION_2}
