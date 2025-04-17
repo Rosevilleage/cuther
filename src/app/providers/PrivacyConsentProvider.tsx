@@ -3,8 +3,6 @@ import privacyConsentStore from '../store/privacyConsentStore';
 import WelcomeScreen from '../../pages/WelcomeScreen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
-AsyncStorage.removeItem('privacyPolicyAgreed');
-
 export const PrivacyConsentProvider = ({
   children,
 }: {
