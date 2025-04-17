@@ -1,10 +1,10 @@
 import React from 'react';
 import {NavigationContainer} from '@react-navigation/native';
-import MainDrawerNavigation from './routes/MainDrawer';
+import MainDrawerNavigation from './MainDrawer';
 import {createStackNavigator} from '@react-navigation/stack';
-import ReportScreen from '../pages/main/ReportScreen';
-import CharacterInfo from '../pages/CharacterInfo';
-import {responsivePixel, responsiveFontSize} from './style/responsivePixel';
+import ReportScreen from '../../pages/main/ReportScreen';
+import CharacterInfo from '../../pages/CharacterInfo';
+import {responsivePixel, responsiveFontSize} from '../style/responsivePixel';
 
 const Stack = createStackNavigator();
 
