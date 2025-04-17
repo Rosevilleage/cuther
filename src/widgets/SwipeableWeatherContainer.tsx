@@ -90,7 +90,10 @@ export default function SwipeableWeatherContainer({
         activeDotColor="gray"
         autoplayTimeout={5}
         style={styles.swiper}>
-        {mainWeatherList.map((weather, i) => (
+        {(mainWeatherList.length < 2
+          ? [currentWeather, targetWeather].filter(Boolean).slice(0, 2)
+          : mainWeatherList
+        ).map((weather, i) => (
           <CharacterWeatherDisplay
             key={i === 0 ? 'cur' : 'sel'}
             currentWeather={weather}
