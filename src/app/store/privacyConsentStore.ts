@@ -7,7 +7,7 @@ interface PrivacyConsentStore {
 }
 
 const privacyConsentStore = create<PrivacyConsentStore>(set => ({
-  isPrivacyPolicyAgreed: false,
+  isPrivacyPolicyAgreed: true,
   setPrivacyPolicyAgreed: async (isAgreed: boolean) => {
     await AsyncStorage.setItem('privacyPolicyAgreed', isAgreed.toString());
     set({isPrivacyPolicyAgreed: isAgreed});
