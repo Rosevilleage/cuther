@@ -12,6 +12,7 @@ const BUTTON_TITLE = '시작하기';
 const NOTIFICATION_DESCRIPTION_1 = '시작하기 버튼을 누름으로써 ';
 const NOTIFICATION_DESCRIPTION_2 = '에 \n동의하는 것으로 간주합니다.';
 const POLICY_TEXT = '개인정보 처리방침';
+const POLICY_URL = process.env.PRIVACY_POLICY_URL as string;
 
 export default function InitScreen() {
   const {setPrivacyPolicyAgreed} = privacyConsentStore();
@@ -50,8 +51,7 @@ export default function InitScreen() {
           {NOTIFICATION_DESCRIPTION_1}
           <TouchableOpacity
             onPress={() => {
-              // 개인정보 처리방침 페이지 생성 후 적용
-              Linking.openURL('');
+              Linking.openURL(POLICY_URL);
             }}>
             <Text style={styles.policyText}>{POLICY_TEXT}</Text>
           </TouchableOpacity>
