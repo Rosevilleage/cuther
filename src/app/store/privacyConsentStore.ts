@@ -3,14 +3,35 @@ import {create} from 'zustand';
 
 interface PrivacyConsentStore {
   isPrivacyPolicyAgreed: boolean;
-  setPrivacyPolicyAgreed: (isAgreed: boolean) => Promise<void>;
+  isThirdPartyConsentAgreed: boolean;
+  setPrivacyPolicyAgreed: ({
+    isPrivacyPolicyAgreed,
+    isThirdPartyConsentAgreed,
+  }: {
+    isPrivacyPolicyAgreed: boolean;
+    isThirdPartyConsentAgreed: boolean;
+  }) => Promise<void>;
 }
 
 const privacyConsentStore = create<PrivacyConsentStore>(set => ({
   isPrivacyPolicyAgreed: true,
-  setPrivacyPolicyAgreed: async (isAgreed: boolean) => {
-    await AsyncStorage.setItem('privacyPolicyAgreed', isAgreed.toString());
-    set({isPrivacyPolicyAgreed: isAgreed});
+  isThirdPartyConsentAgreed: true,
+  setPrivacyPolicyAgreed: async ({
+    isPrivacyPolicyAgreed,
+    isThirdPartyConsentAgreed,
+  }: {
+    isPrivacyPolicyAgreed: boolean;
+    isThirdPartyConsentAgreed: boolean;
+  }) => {
+    await AsyncStorage.setItem(
+      'privacyPolicyAgreed',
+      isPrivacyPolicyAgreed.toString(),
+    );
+    await AsyncStorage.setItem(
+      'thirdPartyConsentAgreed',
+      isThirdPartyConsentAgreed.toString(),
+    );
+    set({isPrivacyPolicyAgreed, isThirdPartyConsentAgreed});
   },
 }));
 

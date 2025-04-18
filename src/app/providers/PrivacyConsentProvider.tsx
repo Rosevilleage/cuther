@@ -8,16 +8,28 @@ export const PrivacyConsentProvider = ({
 }: {
   children: React.ReactNode;
 }) => {
-  const {isPrivacyPolicyAgreed, setPrivacyPolicyAgreed} = privacyConsentStore();
+  const {
+    isPrivacyPolicyAgreed,
+    isThirdPartyConsentAgreed,
+    setPrivacyPolicyAgreed,
+  } = privacyConsentStore();
   useEffect(() => {
     async function checkAgreed() {
-      const isAgreed = await AsyncStorage.getItem('privacyPolicyAgreed');
-      setPrivacyPolicyAgreed(isAgreed === 'true');
+      const privacyPolicyAgreed = await AsyncStorage.getItem(
+        'privacyPolicyAgreed',
+      );
+      const thirdPartyConsentAgreed = await AsyncStorage.getItem(
+        'thirdPartyConsentAgreed',
+      );
+      setPrivacyPolicyAgreed({
+        isPrivacyPolicyAgreed: privacyPolicyAgreed === 'true',
+        isThirdPartyConsentAgreed: thirdPartyConsentAgreed === 'true',
+      });
     }
     checkAgreed();
   }, [setPrivacyPolicyAgreed]);
 
-  if (!isPrivacyPolicyAgreed) {
+  if (!isPrivacyPolicyAgreed || !isThirdPartyConsentAgreed) {
     return <WelcomeScreen />;
   }
   return <>{children}</>;

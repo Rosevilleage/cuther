@@ -30,7 +30,11 @@ type RootStackParamList = {
 type NavigationProp = StackNavigationProp<RootStackParamList>;
 
 export default function InfoScreen() {
-  const {setPrivacyPolicyAgreed, isPrivacyPolicyAgreed} = privacyConsentStore();
+  const {
+    setPrivacyPolicyAgreed,
+    isPrivacyPolicyAgreed,
+    isThirdPartyConsentAgreed,
+  } = privacyConsentStore();
   const navigation = useNavigation<NavigationProp>();
 
   const handlePrivacyPolicyPress = () => {
@@ -47,10 +51,17 @@ export default function InfoScreen() {
       <View style={styles.section}>
         <Text style={styles.sectionTitle}>개인정보</Text>
         <View style={styles.menuItem}>
-          <Text style={styles.menuText}>개인정보 제3자 제공 동의</Text>
+          <Text style={styles.menuText}>
+            개인정보처리방침 및 제3자 제공 동의
+          </Text>
           <Switch
-            value={isPrivacyPolicyAgreed}
-            onValueChange={() => setPrivacyPolicyAgreed(!isPrivacyPolicyAgreed)}
+            value={isThirdPartyConsentAgreed}
+            onValueChange={() =>
+              setPrivacyPolicyAgreed({
+                isPrivacyPolicyAgreed: isPrivacyPolicyAgreed,
+                isThirdPartyConsentAgreed: !isThirdPartyConsentAgreed,
+              })
+            }
           />
         </View>
 
