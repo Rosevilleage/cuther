@@ -1,20 +1,24 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {View, Text, StyleSheet, TouchableOpacity, Linking} from 'react-native';
 import Swiper from 'react-native-swiper';
 import CharacterRenderer from '../features/weather/ui/CharacterRenderer';
 import {responsivePixel} from '../app/style/responsivePixel';
 import {CHARACTER_TYPES} from '../widgets/constants/characterContant';
 import privacyConsentStore from '../app/store/privacyConsentStore';
+import Checkbox from '../app/components/Checkbox';
 
 const TITLE = '귀여운 캐릭터와 함께\n날씨를 손쉽게 파악해보세요';
 const BUTTON_TITLE = '시작하기';
-
-const NOTIFICATION_DESCRIPTION_1 = '시작하기 버튼을 누름으로써 ';
-const NOTIFICATION_DESCRIPTION_2 = '에 \n동의하는 것으로 간주합니다.';
 const POLICY_TEXT = '개인정보 처리방침';
 const POLICY_URL = process.env.PRIVACY_POLICY_URL as string;
 
+const POLICY_BUTTON_TEXT = '개인정보 처리방침에 동의합니다';
+const THIRD_PARTY_BUTTON_TEXT = '개인정보 제3자 제공에 동의합니다';
+
 export default function InitScreen() {
+  const [isPrivacyPolicyAgreed, setIsPrivacyPolicyAgreed] = useState(false);
+  const [isThirdPartyConsentAgreed, setIsThirdPartyConsentAgreed] =
+    useState(false);
   const {setPrivacyPolicyAgreed} = privacyConsentStore();
   return (
     <View style={styles.container}>
@@ -47,20 +51,43 @@ export default function InitScreen() {
         </Swiper>
       </View>
       <View style={styles.buttonContainer}>
-        <Text style={styles.buttonText}>
-          {NOTIFICATION_DESCRIPTION_1}
-          <TouchableOpacity
-            onPress={() => {
-              Linking.openURL(POLICY_URL);
-            }}>
-            <Text style={styles.policyText}>{POLICY_TEXT}</Text>
-          </TouchableOpacity>
-          {NOTIFICATION_DESCRIPTION_2}
-        </Text>
         <TouchableOpacity
-          style={styles.button}
           onPress={() => {
-            setPrivacyPolicyAgreed(true);
+            Linking.openURL(POLICY_URL);
+          }}>
+          <Text style={styles.policyText}>{POLICY_TEXT}</Text>
+        </TouchableOpacity>
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            checked={isPrivacyPolicyAgreed}
+            onPress={() => setIsPrivacyPolicyAgreed(!isPrivacyPolicyAgreed)}
+            label={POLICY_BUTTON_TEXT}
+          />
+        </View>
+        <View style={styles.checkboxContainer}>
+          <Checkbox
+            checked={isThirdPartyConsentAgreed}
+            onPress={() =>
+              setIsThirdPartyConsentAgreed(!isThirdPartyConsentAgreed)
+            }
+            label={THIRD_PARTY_BUTTON_TEXT}
+          />
+        </View>
+
+        <TouchableOpacity
+          disabled={!isPrivacyPolicyAgreed || !isThirdPartyConsentAgreed}
+          style={[
+            styles.button,
+            (!isPrivacyPolicyAgreed || !isThirdPartyConsentAgreed) &&
+              styles.buttonDisabled,
+          ]}
+          onPress={() => {
+            if (isPrivacyPolicyAgreed && isThirdPartyConsentAgreed) {
+              setPrivacyPolicyAgreed({
+                isPrivacyPolicyAgreed: true,
+                isThirdPartyConsentAgreed: true,
+              });
+            }
           }}>
           <Text
             style={{color: '#fff', fontWeight: 'bold', textAlign: 'center'}}>
@@ -78,8 +105,6 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
-    padding: 30,
-    paddingTop: 50,
   },
   logoContainer: {
     justifyContent: 'center',
@@ -91,6 +116,8 @@ const styles = StyleSheet.create({
     fontSize: 22,
     textAlign: 'left',
     fontWeight: 'bold',
+    marginTop: 30,
+    marginInline: 30,
   },
   titleContainer: {
     alignItems: 'flex-start',
@@ -112,6 +139,10 @@ const styles = StyleSheet.create({
   swiperContainer: {
     width: '100%',
     height: '70%',
+    justifyContent: 'center',
+    alignItems: 'center',
+    padding: 30,
+    paddingTop: 50,
   },
   characterTextContainer: {
     width: '100%',
@@ -121,8 +152,18 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    height: '10%',
+    height: '20%',
     gap: 10,
+    borderWidth: 1,
+    borderColor: '#cbcbcb',
+    backgroundColor: '#f7f7f7',
+    borderRadius: 30,
+    borderBottomLeftRadius: 0,
+    borderBottomRightRadius: 0,
+    padding: 30,
+  },
+  checkboxContainer: {
+    marginBottom: responsivePixel(10),
   },
   buttonText: {
     fontSize: 15,
@@ -135,8 +176,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
   },
+  buttonDisabled: {
+    backgroundColor: '#cccccc',
+  },
   policyText: {
     color: '#0474fd',
     fontWeight: 'bold',
+    textAlign: 'center',
   },
 });
