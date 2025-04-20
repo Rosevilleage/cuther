@@ -9,24 +9,80 @@ import {
   WeatherFcstItemDTO,
   VilageFcstCategory,
   MidCondition,
+  WeatherDTO,
 } from '../model/weatherDTO';
 import {
   ncstDTOToCurrentWeather,
   vilageFcstDTOToWeathers,
 } from '../model/weatherMapper';
 import {getSunRiseSet} from '../api/riseApi';
-
-import {RiseSetData} from '../model/riseDTO';
 import {RegId} from '../../geoLocation/model/geoLocationStore';
 import dayjs from 'dayjs';
 import {getMidWeatherStatus} from './weatherUtil';
 import {MidTaRegId} from '../../geoLocation/lib/geoLocationUtils';
+import {parseXml, WeatherXMLToJSONResponse} from '../../../app/lib/errorUtils';
+import {AxiosResponse} from 'axios';
+import {RiseResponse} from '../model/riseDTO';
+// import {getErrorMessage} from '../../../app/lib/errorUtils';
 
 interface WeatherQueryParams {
   base_date: string;
   base_time: string;
   nx: number;
   ny: number;
+}
+
+function getWeatherApiError(
+  dto: AxiosResponse<RiseResponse, any>,
+  apiName: string,
+): void;
+function getWeatherApiError(
+  dto: AxiosResponse<WeatherDTO<any>, any>,
+  apiName: string,
+): void;
+function getWeatherApiError(
+  dto: AxiosResponse<WeatherDTO<any> | RiseResponse, any>,
+  apiName: string,
+): void {
+  if (dto.data.response?.header.resultCode !== '00') {
+    const dtoWithHeaders = dto as AxiosResponse<
+      WeatherDTO<any> | RiseResponse,
+      any
+    > & {
+      headers: {'content-type': string};
+      data: string;
+    };
+    if (
+      // 에러 응답이 xml로 오는 경우
+      'headers' in dto &&
+      'data' in dto &&
+      dto.headers['content-type'] === 'text/xml;charset=UTF-8'
+    ) {
+      const {
+        OpenAPI_ServiceResponse: {
+          cmmMsgHeader: {returnAuthMsg, returnReasonCode},
+        },
+      } = parseXml(dtoWithHeaders.data) as WeatherXMLToJSONResponse;
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          `${apiName} 에러 발생 :`,
+          `${returnReasonCode} ${returnAuthMsg}`,
+        );
+      }
+      throw new Error(`${returnReasonCode} ${returnAuthMsg}`);
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          `${apiName} 에러 발생 :`,
+          `${dto.data.response?.header.resultCode} ${dto.data.response?.header.resultMsg}`,
+        );
+      }
+      throw new Error(
+        `${dto.data.response?.header.resultCode} ${dto.data.response?.header.resultMsg}`,
+      );
+    }
+  }
 }
 
 export const hourlyQueryOption = (hourlyWeatherParams: WeatherQueryParams) => {
@@ -42,15 +98,11 @@ export const hourlyQueryOption = (hourlyWeatherParams: WeatherQueryParams) => {
       getFcstWeather<WeatherFcstItemDTO<VilageFcstCategory>>(
         '/getVilageFcst',
         hourlyWeatherParams,
-      ).then(res => res.data.response),
-    select(data) {
-      if (data.header.resultCode !== '00') {
-        const errorMessage = `${data.header.resultCode} hourly api error: ${data.header.resultMsg}`;
-        throw new Error(errorMessage);
-      }
-
-      return vilageFcstDTOToWeathers(data.body.items.item);
-    },
+      ).then(res => {
+        getWeatherApiError(res, 'hourly');
+        return res.data.response.body.items.item;
+      }),
+    select: vilageFcstDTOToWeathers,
     enabled: hourlyWeatherParams.nx !== 0 && hourlyWeatherParams.ny !== 0,
   });
 };
@@ -65,15 +117,12 @@ export const nowWeatherQueryOption = (nowWeatherParams: WeatherQueryParams) => {
       nowWeatherParams.ny,
     ],
     queryFn: () =>
-      getNcstWeather(nowWeatherParams).then(res => res.data.response),
+      getNcstWeather(nowWeatherParams).then(res => {
+        getWeatherApiError(res, 'now');
+        return res.data.response.body.items.item;
+      }),
     staleTime: 0,
-    select(data) {
-      if (data.header.resultCode !== '00') {
-        const errorMessage = `${data.header.resultCode} now weather api error: ${data.header.resultMsg}`;
-        throw new Error(errorMessage);
-      }
-      return ncstDTOToCurrentWeather(data.body.items.item);
-    },
+    select: ncstDTOToCurrentWeather,
     enabled: nowWeatherParams.nx !== 0 && nowWeatherParams.ny !== 0,
   });
 };
@@ -85,17 +134,15 @@ export const sunRiseSetQueryOption = (
 ) => {
   return queryOptions({
     queryKey: ['sunRiseSet', base_date, lat, lng],
-    queryFn: (): Promise<RiseSetData> =>
-      getSunRiseSet(base_date, lat, lng).then(res => res.data.response),
+    queryFn: () =>
+      getSunRiseSet(base_date, lat, lng).then(res => {
+        console.log('res', res);
+
+        getWeatherApiError(res, 'sunRiseSet');
+        return res.data.response?.body.items.item;
+      }),
     select(data): [string, string] {
-      if (data.header.resultCode !== '00') {
-        const errorMessage = `${data.header.resultCode} sunRiseSet api error: ${data.header.resultMsg}`;
-        throw new Error(errorMessage);
-      }
-      return [
-        data.body.items.item.sunrise.trim(),
-        data.body.items.item.sunset.trim(),
-      ];
+      return [data.sunrise.trim(), data.sunset.trim()];
     },
     enabled: lat !== 0 && lng !== 0,
   });
@@ -104,20 +151,19 @@ export const sunRiseSetQueryOption = (
 export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
   return queryOptions({
     queryKey: ['weather', 'daily', 'condition', regId],
-    queryFn: () => getMidConditions(regId, tmFc).then(res => res.data.response),
+    queryFn: () =>
+      getMidConditions(regId, tmFc).then(res => {
+        getWeatherApiError(res, 'dailyCondition');
+        return res.data.response?.body.items.item;
+      }),
     select(data) {
-      if (data.header.resultCode !== '00') {
-        const errorMessage = `${data.header.resultCode} daily condition api error: ${data.header.resultMsg}`;
-        throw new Error(errorMessage);
-      }
-
       const result: {
         date: string;
         amCon: string;
         pmCon: string;
       }[] = [];
       const date = dayjs(tmFc.substring(0, 8));
-      const item = data.body.items.item[0];
+      const item = data[0];
       Object.entries(item).forEach(([category, value]) => {
         if (category === 'regId') {
           return;
@@ -157,21 +203,19 @@ export const dailyTemperatureQueryOption = (
   return queryOptions({
     queryKey: ['weather', 'daily', 'template', midTaRegId],
     queryFn: () => {
-      return getMidTemplate(midTaRegId, tmFc).then(res => res.data.response);
+      return getMidTemplate(midTaRegId, tmFc).then(res => {
+        getWeatherApiError(res, 'dailyTemperature');
+        return res.data.response?.body.items.item;
+      });
     },
     select(data) {
-      if (data.header.resultCode !== '00') {
-        const errorMessage = `${data.header.resultCode} daily temperature api error: ${data.header.resultMsg}`;
-        throw new Error(errorMessage);
-      }
-
       const result: {
         date: string;
         min: number;
         max: number;
       }[] = [];
       const date = dayjs(tmFc.substring(0, 8));
-      const item = data.body.items.item[0];
+      const item = data[0];
 
       Object.entries(item).forEach(([category, value]) => {
         if (category === 'regId') {
