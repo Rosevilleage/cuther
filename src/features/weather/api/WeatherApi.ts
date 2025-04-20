@@ -17,12 +17,16 @@ const midWeatherFetcher = axios.create({
 });
 
 weatherFetcher.interceptors.request.use(req => {
-  // console.log('wetherReq :', req);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('wetherReq :', req);
+  }
   return req;
 });
 
 weatherFetcher.interceptors.response.use(res => {
-  // console.log('wetherRes :', res);
+  if (process.env.NODE_ENV === 'development') {
+    console.log('wetherRes :', res);
+  }
   return res;
 });
 
