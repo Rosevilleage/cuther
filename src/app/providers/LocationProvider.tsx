@@ -23,10 +23,10 @@ const LocationProvider: React.FC<LocationProviderProps> = ({children}) => {
           Geolocation.getCurrentPosition(
             async position => {
               const {latitude, longitude} = position.coords;
-              const {nx, ny, lat, lng} = getXYConv(latitude, longitude);
-              setLatLng(lat, lng);
+              const {nx, ny} = getXYConv(latitude, longitude);
+              setLatLng(latitude, longitude);
               setXY(nx, ny);
-              const placeData = await getGeoLocation(lat, lng).then(
+              const placeData = await getGeoLocation(latitude, longitude).then(
                 res => res.data,
               );
 
