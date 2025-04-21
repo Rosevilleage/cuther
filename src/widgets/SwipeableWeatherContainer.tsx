@@ -90,7 +90,7 @@ export default function SwipeableWeatherContainer({
         showsPagination
         horizontal={true}
         activeDotColor="gray"
-        autoplayTimeout={5}
+        loop={false}
         height={SCREEN_WIDTH * 1.5}>
         {(mainWeatherList.length < 2
           ? [currentWeather, targetWeather].filter(Boolean).slice(0, 2)
