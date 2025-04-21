@@ -4,41 +4,39 @@ import {Weather, WeatherCondition} from '../../../entitites/Weather';
 
 export function roundToNearestBaseTime(
   baseDate: BaseDate,
-  baseTime: BaseTime,
-): {baseDate: BaseDate; baseTime: BaseTime} {
-  if (!/^\d{8}$/.test(baseDate) || !/^\d{4}$/.test(baseTime)) {
-    throw new Error(
-      'Invalid date or time format. Expected formats: YYYYMMDD and HHMM',
-    );
-  }
+  currentTime: BaseTime,
+): {
+  baseDate: BaseDate;
+  baseTime: BaseTime;
+} {
+  const baseTimes = [
+    {time: '0210', base: '0200'},
+    {time: '0510', base: '0500'},
+    {time: '0810', base: '0800'},
+    {time: '1110', base: '1100'},
+    {time: '1410', base: '1400'},
+    {time: '1710', base: '1700'},
+    {time: '2010', base: '2000'},
+    {time: '2310', base: '2300'},
+  ];
 
-  const time = +baseTime;
+  let baseDateResult = baseDate;
+  let baseTimeResult: BaseTime = '2300';
 
-  let baseTimeResult: BaseTime;
-
-  if (time > 2130) {
-    baseTimeResult = '2000';
-  } else if (time > 1830) {
-    baseTimeResult = '1700';
-  } else if (time > 1530) {
-    baseTimeResult = '1400';
-  } else if (time > 1230) {
-    baseTimeResult = '1100';
-  } else if (time > 930) {
-    baseTimeResult = '0800';
-  } else if (time > 630) {
-    baseTimeResult = '0500';
-  } else if (time > 330) {
-    baseTimeResult = '0200';
-  } else {
-    const prevDate = dayjs(baseDate, 'YYYYMMDD')
+  if (currentTime < '0210') {
+    baseDateResult = dayjs(baseDate)
       .subtract(1, 'day')
       .format('YYYYMMDD') as BaseDate;
-
-    return {baseDate: prevDate, baseTime: '2300'};
+    baseTimeResult = '2300';
+  } else {
+    for (const {time, base} of baseTimes) {
+      if (currentTime >= time) {
+        baseTimeResult = base as BaseTime;
+      }
+    }
   }
 
-  return {baseDate, baseTime: baseTimeResult};
+  return {baseDate: baseDateResult, baseTime: baseTimeResult};
 }
 
 export function calculatePerceivedTemperature(
@@ -175,7 +173,27 @@ export function getMidWeatherStatus(condition: MidCondition) {
   }
 }
 
-export function getCurrentWeatherTime(baseTime: BaseTime) {
-  const currentTime = `${baseTime.slice(0, 3)}0` as BaseTime;
-  return currentTime;
+export function getCurrentWeatherTime(baseTime: BaseTime, base_date: BaseDate) {
+  const minutes = parseInt(baseTime.slice(2, 4), 10);
+  const hour = parseInt(baseTime.slice(0, 2), 10);
+
+  if (minutes <= 10) {
+    if (hour === 0) {
+      return {
+        baseDate: dayjs(base_date)
+          .subtract(1, 'day')
+          .format('YYYYMMDD') as BaseDate,
+        baseTime: '2300' as BaseTime,
+      };
+    }
+    return {
+      baseDate: base_date as BaseDate,
+      baseTime: dayjs(baseTime).subtract(1, 'hour').format('HH00') as BaseTime,
+    };
+  }
+
+  return {
+    baseDate: base_date as BaseDate,
+    baseTime: dayjs(baseTime).format('HH00') as BaseTime,
+  };
 }

@@ -39,16 +39,15 @@ export default function MainScreen() {
   const base_time = dayjs().format('HHmm') as BaseTime;
   const hourlyDate = roundToNearestBaseTime(base_date, base_time);
   const {width, height} = useWindowDimensions();
-
+  const nowDate = getCurrentWeatherTime(base_time, base_date);
   const {data: currentWeather, isLoading: isNowWeatherLoading} = useQuery(
     nowWeatherQueryOption({
-      base_date,
-      base_time: getCurrentWeatherTime(base_time),
+      base_date: nowDate.baseDate,
+      base_time: nowDate.baseTime,
       nx,
       ny,
     }),
   );
-
   const {data: hourlyWeathers, isLoading: isHourlyWeatherLoading} = useQuery(
     hourlyQueryOption({
       base_date: hourlyDate.baseDate,
