@@ -105,6 +105,7 @@ const styles = StyleSheet.create({
     flexDirection: 'column',
     justifyContent: 'space-between',
     alignItems: 'center',
+    height: '100%',
   },
   logoContainer: {
     justifyContent: 'center',
@@ -137,8 +138,8 @@ const styles = StyleSheet.create({
     color: '#787777',
   },
   swiperContainer: {
+    flex: 1,
     width: '100%',
-    height: '70%',
     justifyContent: 'center',
     alignItems: 'center',
     padding: 30,
@@ -152,7 +153,7 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     width: '100%',
-    height: '20%',
+
     gap: 10,
     borderWidth: 1,
     borderColor: '#cbcbcb',
