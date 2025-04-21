@@ -6,16 +6,32 @@ import {
 } from '@react-navigation/drawer';
 import InfoScreen from '../../pages/InfoScreen';
 import {responsivePixel} from '../style/responsivePixel';
-
+import {TouchableOpacity} from 'react-native';
+import {useQueryClient} from '@tanstack/react-query';
+import ResetIcon from './../../assets/icons/svg/reset.svg';
 const MainDrawer = createDrawerNavigator();
+
 export default function MainDrawerNavigation() {
+  const queryClient = useQueryClient();
+  const resetButton = () => {
+    return (
+      <TouchableOpacity
+        style={{marginLeft: 20}}
+        onPress={() => {
+          queryClient.invalidateQueries();
+          queryClient.resetQueries();
+        }}>
+        <ResetIcon />
+      </TouchableOpacity>
+    );
+  };
   return (
     <MainDrawer.Navigator
       initialRouteName="Home"
       screenOptions={{
         headerTitle: '',
         drawerPosition: 'right',
-        headerLeft: () => undefined,
+        headerLeft: () => resetButton(),
         headerRight: DrawerToggleButton,
         drawerStyle: {
           width: '70%',
