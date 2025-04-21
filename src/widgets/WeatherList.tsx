@@ -50,6 +50,7 @@ export default function WeatherList({
   const [openItemId, setOpenItemId] = useState<number | null>(null);
   const weathers: MixedDailyWeather = {};
   const hourlyWeatherList = Object.entries(hourlyWeathers);
+
   hourlyWeatherList.slice(1, -1).forEach(([date, data]) => {
     const subMin = Math.min(
       ...data.weathers.map(({temperature}) => temperature),
@@ -109,10 +110,11 @@ export default function WeatherList({
   ) {
     return null;
   }
+
   return (
     <View style={styles.container}>
       <FlatList
-        data={Object.entries(weathers).slice(1, -1)}
+        data={Object.entries(weathers)}
         renderItem={({item, index}) => (
           <WeatherStack
             dailyWeathers={item[1]}
@@ -120,6 +122,7 @@ export default function WeatherList({
             day={item[0]}
             isOpen={openItemId === index}
             onToggle={() => setOpenItemId(index)}
+            isLast={index === Object.entries(weathers).length - 1}
           />
         )}
         scrollEnabled={false}
@@ -134,12 +137,14 @@ function WeatherStack({
   isOpen,
   onToggle,
   sunRiseSet,
+  isLast,
 }: {
   dailyWeathers: MixedDailyWeather[keyof MixedDailyWeather];
   day: string;
   isOpen: boolean;
   sunRiseSet: [string, string];
   onToggle: () => void;
+  isLast: boolean;
 }) {
   const mm = day.substring(4, 6),
     dd = day.substring(6);
@@ -158,7 +163,7 @@ function WeatherStack({
   }, [animationHeight, isOpen]);
 
   return (
-    <View style={styles.itemContainer}>
+    <View style={isLast ? styles.lastItemContainer : styles.itemContainer}>
       <View style={{flexDirection: 'row', gap: 10}}>
         <View
           style={{
@@ -225,7 +230,6 @@ function WeatherStack({
         )}
         {/* horizontal scroll */}
       </View>
-      {/* {isOpen && ( */}
       {dailyWeathers.hourly && (
         <Animated.View style={[animatedStyle, {overflow: 'hidden'}]}>
           <View
@@ -305,6 +309,11 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: '#ccc',
     borderRadius: 15,
+  },
+  lastItemContainer: {
+    padding: 15,
+    paddingHorizontal: 0,
+    paddingBottom: 0,
   },
   toggleButton: {
     alignSelf: 'flex-end',
