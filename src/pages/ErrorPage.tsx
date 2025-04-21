@@ -29,9 +29,11 @@ export default function ErrorPage() {
         />
         <Text style={styles.title}>{customError.title}</Text>
         <Text style={styles.message}>{customError.message}</Text>
-        <TouchableOpacity style={styles.button} onPress={handleRetry}>
-          <Text style={styles.buttonText}>다시 시도</Text>
-        </TouchableOpacity>
+        {customError.title !== '위치 권한 필요' && (
+          <TouchableOpacity style={styles.button} onPress={handleRetry}>
+            <Text style={styles.buttonText}>다시 시도</Text>
+          </TouchableOpacity>
+        )}
       </View>
     </View>
   );
