@@ -136,8 +136,6 @@ export const sunRiseSetQueryOption = (
     queryKey: ['sunRiseSet', base_date, lat, lng],
     queryFn: () =>
       getSunRiseSet(base_date, lat, lng).then(res => {
-        console.log('res', res);
-
         getWeatherApiError(res, 'sunRiseSet');
         return res.data.response?.body.items.item;
       }),
