@@ -1,13 +1,15 @@
 import React, {useEffect, useState} from 'react';
-import {View, StyleSheet} from 'react-native';
+import {View, StyleSheet, Dimensions} from 'react-native';
 import Swiper from 'react-native-swiper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
 
 import {CurWeather, HourlyWeathers} from '../entitites/Weather';
 import CharacterWeatherDisplay from './CharacterWeatherDisplay';
-import {responsiveHeight, responsivePixel} from '../app/style/responsivePixel';
+import {responsivePixel} from '../app/style/responsivePixel';
 import Skeleton from '../app/components/Skeleton';
+
+const {width: SCREEN_WIDTH} = Dimensions.get('window');
 
 interface SwipeableWeatherContainerProps {
   currentWeather: CurWeather | null;
@@ -89,7 +91,7 @@ export default function SwipeableWeatherContainer({
         horizontal={true}
         activeDotColor="gray"
         autoplayTimeout={5}
-        style={styles.swiper}>
+        height={SCREEN_WIDTH * 1.5}>
         {(mainWeatherList.length < 2
           ? [currentWeather, targetWeather].filter(Boolean).slice(0, 2)
           : mainWeatherList
@@ -164,9 +166,8 @@ function RenderSkeletonUI() {
 
 const styles = StyleSheet.create({
   container: {
-    height: responsiveHeight(610),
+    height: SCREEN_WIDTH * 1.5,
   },
-  swiper: {},
   skeletonContainer: {
     flex: 1,
     width: '100%',
@@ -176,9 +177,9 @@ const styles = StyleSheet.create({
     padding: responsivePixel(20),
   },
   skeletonCharacterContainer: {
+    flex: 1,
     alignItems: 'center',
     justifyContent: 'center',
-    height: responsivePixel(400),
     marginBottom: responsivePixel(20),
   },
   skeletonWeatherInfoContainer: {

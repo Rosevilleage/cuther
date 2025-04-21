@@ -1,10 +1,7 @@
 import React, {useState} from 'react';
 import {View, Text, StyleSheet, Pressable} from 'react-native';
 import dayjs from 'dayjs';
-import {
-  responsivePixel,
-  responsiveFontSize,
-} from '../app/style/responsivePixel';
+import {responsiveFontSize} from '../app/style/responsivePixel';
 import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
 import CharacterRenderer from '../features/weather/ui/CharacterRenderer';
 import {perceivedTemperatureToLevel} from '../features/weather/lib/weatherUtil';
@@ -92,11 +89,7 @@ export default function CharacterWeatherDisplay({
           </>
         )}
       </View>
-      <View
-        style={{
-          height: responsivePixel(400),
-          overflow: 'hidden',
-        }}>
+      <View style={styles.characterContainer}>
         <CharacterRenderer type={perceivedTempLevel} loop autoPlay />
       </View>
       <View style={styles.currentInfoContainer}>
@@ -161,7 +154,7 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   mainsection: {
-    height: responsivePixel(600),
+    flex: 1,
     backgroundColor: 'white',
     borderRadius: 15,
   },
@@ -175,14 +168,16 @@ const styles = StyleSheet.create({
     textAlign: 'left',
     fontSize: responsiveFontSize(18),
   },
-  character: {
-    flex: 1,
+  characterContainer: {
+    width: '100%',
+    aspectRatio: 1,
+    overflow: 'hidden',
   },
   currentInfoContainer: {
     flex: 1,
     flexDirection: 'row',
-    justifyContent: 'center',
-    alignContent: 'center',
+    justifyContent: 'space-between',
+    alignItems: 'center',
     padding: 15,
   },
   textRightLarge: {
