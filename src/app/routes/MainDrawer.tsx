@@ -8,7 +8,7 @@ import InfoScreen from '../../pages/InfoScreen';
 import {responsivePixel} from '../style/responsivePixel';
 import {TouchableOpacity} from 'react-native';
 import {useQueryClient} from '@tanstack/react-query';
-import ResetIcon from './../../assets/icons/svg/reset.svg';
+import ResetIcon from './../../assets/icons/svg/resetIcon.svg';
 const MainDrawer = createDrawerNavigator();
 
 export default function MainDrawerNavigation() {
