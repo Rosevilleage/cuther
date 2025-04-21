@@ -174,27 +174,25 @@ export function getMidWeatherStatus(condition: MidCondition) {
 }
 
 export function getCurrentWeatherTime(baseTime: BaseTime, base_date: BaseDate) {
-  // const minutes = parseInt(baseTime.slice(2, 4), 10);
-  // const hour = parseInt(baseTime.slice(0, 2), 10);
+  const minutes = parseInt(baseTime.slice(2, 4), 10);
+  const hour = parseInt(baseTime.slice(0, 2), 10);
 
-  // if (minutes <= 10) {
-  //   if (hour === 0) {
-  //   }
-  //   return {
-  //     baseDate: base_date as BaseDate,
-  //     baseTime: dayjs(baseTime).subtract(1, 'hour').format('HH00') as BaseTime,
-  //   };
-  // }
-  // if (+baseTime <= 10) {
-  //   return {
-  //     baseDate: dayjs(base_date)
-  //       .subtract(1, 'day')
-  //       .format('YYYYMMDD') as BaseDate,
-  //     baseTime: '2300' as BaseTime,
-  //   };
-  // }
+  if (minutes <= 10) {
+    if (hour === 0) {
+      return {
+        baseDate: dayjs(base_date)
+          .subtract(1, 'day')
+          .format('YYYYMMDD') as BaseDate,
+        baseTime: '2300' as BaseTime,
+      };
+    }
+    return {
+      baseDate: base_date as BaseDate,
+      baseTime: dayjs(baseTime).subtract(1, 'hour').format('HH00') as BaseTime,
+    };
+  }
   return {
     baseDate: base_date as BaseDate,
-    baseTime: `${baseTime.slice(0, 3)}0` as BaseTime,
+    baseTime: `${baseTime.slice(0, 2)}00` as BaseTime,
   };
 }
