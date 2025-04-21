@@ -17,9 +17,6 @@ const midWeatherFetcher = axios.create({
 });
 
 weatherFetcher.interceptors.request.use(req => {
-  if (process.env.NODE_ENV === 'development') {
-    console.log('wetherReq :', req);
-  }
   return req;
 });
 
@@ -52,6 +49,9 @@ export function getNcstWeather({
     nx,
     ny,
   };
+  if (process.env.NODE_ENV === 'development') {
+    console.log('nowWeatherReq :', params);
+  }
   return weatherFetcher.get<WeatherDTO<WeatherNcstItemDTO>>(
     '/getUltraSrtNcst',
     {params},
@@ -72,6 +72,9 @@ export function getFcstWeather<T>(
     nx,
     ny,
   };
+  if (process.env.NODE_ENV === 'development') {
+    console.log('hourlyWeatherReq :', params);
+  }
   return weatherFetcher.get<WeatherDTO<T>>(url, {params});
 }
 
@@ -85,6 +88,7 @@ export function getMidConditions(regId: string, tmFc: string) {
     regId,
     tmFc,
   };
+
   return midWeatherFetcher.get<MidLandFcstDTO>(url, {params});
 }
 
@@ -98,5 +102,6 @@ export function getMidTemplate(regId: string, tmFc: string) {
     regId,
     tmFc,
   };
+
   return midWeatherFetcher.get<MidTaDTO>(url, {params});
 }
