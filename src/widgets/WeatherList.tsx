@@ -121,7 +121,7 @@ export default function WeatherList({
             sunRiseSet={sunRiseSet}
             day={item[0]}
             isOpen={openItemId === index}
-            onToggle={() => setOpenItemId(index)}
+            onToggle={() => setOpenItemId(index === openItemId ? null : index)}
             isLast={index === Object.entries(weathers).length - 1}
           />
         )}
@@ -164,7 +164,9 @@ function WeatherStack({
 
   return (
     <View style={isLast ? styles.lastItemContainer : styles.itemContainer}>
-      <View style={{flexDirection: 'row', gap: 10}}>
+      <ListStackContainer
+        onPress={ToggleExpand}
+        touchable={!!dailyWeathers.hourly}>
         <View
           style={{
             flex: 1,
@@ -217,19 +219,17 @@ function WeatherStack({
           </View>
         </View>
         {dailyWeathers.hourly && (
-          <TouchableOpacity
-            onPress={ToggleExpand}
-            style={{justifyContent: 'center'}}>
+          <View style={{justifyContent: 'center'}}>
             <Arrow
               style={{
                 transform: [{rotate: isOpen ? '180deg' : '0deg'}],
                 marginTop: -15,
               }}
             />
-          </TouchableOpacity>
+          </View>
         )}
         {/* horizontal scroll */}
-      </View>
+      </ListStackContainer>
       {dailyWeathers.hourly && (
         <Animated.View style={[animatedStyle, {overflow: 'hidden'}]}>
           <View
@@ -248,6 +248,24 @@ function WeatherStack({
         </Animated.View>
       )}
     </View>
+  );
+}
+
+function ListStackContainer({
+  children,
+  onPress,
+  touchable,
+}: {
+  children: React.ReactNode;
+  onPress: () => void;
+  touchable: boolean;
+}) {
+  return touchable ? (
+    <TouchableOpacity style={{flexDirection: 'row', gap: 10}} onPress={onPress}>
+      {children}
+    </TouchableOpacity>
+  ) : (
+    <View style={{flexDirection: 'row', gap: 10}}>{children}</View>
   );
 }
 
