@@ -134,7 +134,7 @@ const styles = StyleSheet.create({
   },
   characterText: {
     fontSize: 18,
-    textAlign: 'left',
+    textAlign: 'center',
     color: '#787777',
   },
   swiperContainer: {
