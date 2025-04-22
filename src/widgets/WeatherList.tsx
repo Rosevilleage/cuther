@@ -12,6 +12,7 @@ import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRen
 import {genWeatherStatus} from '../features/weather/lib/weatherUtil';
 import Arrow from './../assets/icons/svg/arrow.svg';
 import Animated, {
+  Easing,
   useAnimatedStyle,
   useSharedValue,
   withTiming,
@@ -159,7 +160,15 @@ function WeatherStack({
   }));
 
   useEffect(() => {
-    animationHeight.value = isOpen ? withTiming(130) : withTiming(0);
+    animationHeight.value = isOpen
+      ? withTiming(130, {
+          duration: 300,
+          easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+        })
+      : withTiming(0, {
+          duration: 300,
+          easing: Easing.bezier(0.25, 0.1, 0.25, 1),
+        });
   }, [animationHeight, isOpen]);
 
   return (
