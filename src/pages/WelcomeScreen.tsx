@@ -154,7 +154,7 @@ const styles = StyleSheet.create({
   buttonContainer: {
     width: '100%',
 
-    gap: 10,
+    gap: 15,
     borderWidth: 1,
     borderColor: '#cbcbcb',
     backgroundColor: '#f7f7f7',
@@ -162,6 +162,7 @@ const styles = StyleSheet.create({
     borderBottomLeftRadius: 0,
     borderBottomRightRadius: 0,
     padding: 30,
+    paddingBottom: 10,
   },
   checkboxContainer: {
     marginBottom: responsivePixel(10),
