@@ -37,7 +37,7 @@ export default function CharacterWeatherDisplay({
   const base_time = dayjs().format('HHmm');
 
   const handleTimeSelect = (hour: number) => {
-    if (selectedDate && selectedDate !== '' && setSelectedDate) {
+    if (!!selectedDate && selectedDate !== '' && setSelectedDate) {
       const newDate = dayjs()
         .hour(hour)
         .minute(0)

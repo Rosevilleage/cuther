@@ -27,12 +27,12 @@ export default function SwipeableWeatherContainer({
   const [selectedTime, setSelectedTime] = useState<string>('');
 
   useEffect(() => {
-    setTimeout(async () => {
-      try {
-        const savedDate = await AsyncStorage.getItem('selectedWeatherDate');
-        if (savedDate) {
-          setSelectedTime(savedDate);
-        }
+    const getSelectedTime = async () => {
+      const savedDate = await AsyncStorage.getItem('selectedWeatherDate');
+
+      if (savedDate) {
+        setSelectedTime(savedDate);
+      } else {
         setSelectedTime(
           dayjs()
             .add(6, 'hours')
@@ -41,10 +41,9 @@ export default function SwipeableWeatherContainer({
             .millisecond(0)
             .format('HHmm'),
         );
-      } catch (error) {
-        console.log((error as Error).message + '\n' + 'Time select error');
       }
-    }, 1000);
+    };
+    getSelectedTime();
     return () => {
       setSelectedTime('');
     };
