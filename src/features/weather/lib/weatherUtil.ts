@@ -188,7 +188,9 @@ export function getCurrentWeatherTime(baseTime: BaseTime, base_date: BaseDate) {
     }
     return {
       baseDate: base_date as BaseDate,
-      baseTime: dayjs(baseTime).subtract(1, 'hour').format('HH00') as BaseTime,
+      baseTime: dayjs(`${base_date}${baseTime}`)
+        .subtract(1, 'hour')
+        .format('HH00') as BaseTime,
     };
   }
   return {
