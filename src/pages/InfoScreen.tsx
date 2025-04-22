@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState} from 'react';
 import {
   View,
   Text,
@@ -16,11 +16,14 @@ import {useNavigation} from '@react-navigation/native';
 import {StackNavigationProp} from '@react-navigation/stack';
 import {version as appVersion} from '../../package.json';
 import privacyConsentStore from '../app/store/privacyConsentStore';
+import Modal from '../app/components/Modal';
 
 // 앱 버전 정보
 const APP_VERSION = appVersion;
+
 const POLICY_URL = process.env.PRIVACY_POLICY_URL as string;
 const NOTICE_URL = process.env.NOTICE_URL as string;
+
 type RootStackParamList = {
   Main: undefined;
   Report: undefined;
@@ -36,7 +39,7 @@ export default function InfoScreen() {
     isThirdPartyConsentAgreed,
   } = privacyConsentStore();
   const navigation = useNavigation<NavigationProp>();
-
+  const [isOpen, setIsOpen] = useState(false);
   const handlePrivacyPolicyPress = () => {
     // 개인정보 처리방침 페이지 생성 후 적용
     Linking.openURL(POLICY_URL);
@@ -92,6 +95,26 @@ export default function InfoScreen() {
           <Text style={styles.menuArrow}>›</Text>
         </TouchableOpacity>
       </View>
+
+      <View style={styles.section}>
+        <Text style={styles.sectionTitle}>데이터</Text>
+        <TouchableOpacity
+          style={styles.menuItem}
+          onPress={() => setIsOpen(true)}>
+          <Text style={styles.menuText}>날씨 데이터 출처</Text>
+          <Text style={styles.menuArrow}>›</Text>
+        </TouchableOpacity>
+      </View>
+      {isOpen && (
+        <Modal visible={isOpen} onClose={() => setIsOpen(false)}>
+          <View style={styles.modalContent}>
+            <Text style={styles.modalTitle}>공공데이터 Open API</Text>
+            <Text style={styles.modalText}>기상청_중기예보 조회서비스</Text>
+            <Text style={styles.modalText}>기상청_기상특보 조회서비스</Text>
+            <Text style={styles.modalText}>기상청_단기예보 조회서비스</Text>
+          </View>
+        </Modal>
+      )}
     </ScrollView>
   );
 }
@@ -148,12 +171,19 @@ const styles = StyleSheet.create({
     color: '#999',
   },
   modalContent: {
-    padding: responsivePixel(15),
+    padding: responsivePixel(10),
+    backgroundColor: '#e0f7fa',
+    borderRadius: responsivePixel(8),
+  },
+  modalTitle: {
+    fontSize: responsiveFontSize(16),
+    fontWeight: 'bold',
+    color: '#00796b',
+    marginBottom: responsivePixel(5),
   },
   modalText: {
     fontSize: responsiveFontSize(14),
-    color: '#333',
-    marginBottom: responsivePixel(10),
-    lineHeight: responsivePixel(20),
+    color: '#004d40',
+    marginBottom: responsivePixel(3),
   },
 });
