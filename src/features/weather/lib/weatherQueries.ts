@@ -137,7 +137,7 @@ export const sunRiseSetQueryOption = (
     queryFn: () =>
       getSunRiseSet(base_date, lat, lng).then(res => {
         getWeatherApiError(res, 'sunRiseSet');
-        return res.data.response?.body.items.item;
+        return res.data.response.body.items.item;
       }),
     select(data): [string, string] {
       return [data.sunrise.trim(), data.sunset.trim()];
@@ -152,7 +152,10 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
     queryFn: () =>
       getMidConditions(regId, tmFc).then(res => {
         getWeatherApiError(res, 'dailyCondition');
-        return res.data.response?.body.items.item;
+        if (process.env.NODE_ENV === 'development') {
+          console.log('dailyConditionRes :', res);
+        }
+        return res.data.response.body.items.item;
       }),
     select(data) {
       const result: {
@@ -203,7 +206,10 @@ export const dailyTemperatureQueryOption = (
     queryFn: () => {
       return getMidTemplate(midTaRegId, tmFc).then(res => {
         getWeatherApiError(res, 'dailyTemperature');
-        return res.data.response?.body.items.item;
+        if (process.env.NODE_ENV === 'development') {
+          console.log('dailyTemperatureRes :', res);
+        }
+        return res.data.response.body.items.item;
       });
     },
     select(data) {

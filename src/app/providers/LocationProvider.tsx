@@ -48,11 +48,17 @@ const LocationProvider: React.FC<LocationProviderProps> = ({children}) => {
             const {nx, ny} = getXYConv(latitude, longitude);
             setLatLng(latitude, longitude);
             setXY(nx, ny);
-            const placeData = await getGeoLocation(latitude, longitude).then(
-              res => res.data,
-            );
+            const placeData = await getGeoLocation(latitude, longitude)
+              .then(res => res.data)
+              .catch(() => {
+                setCustomError({
+                  title: '일시적인 서비스 오류',
+                  message:
+                    '현재 날씨 정보를 불러오는 데 문제가 발생했습니다. 잠시 후 다시 시도해주세요.',
+                });
+              });
 
-            if (placeData.status.code !== 0) {
+            if (placeData?.status.code !== 0) {
               setCustomError({
                 title: '서비스 이용 불가 지역',
                 message: '해당 서비스는 대한민국에서만 지원됩니다.',
