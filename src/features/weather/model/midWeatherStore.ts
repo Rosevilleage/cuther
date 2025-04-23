@@ -1,5 +1,5 @@
 import {create} from 'zustand';
-import {DailyWeathers} from '../../../entitites/Weather';
+import {DailyWeathers} from '../../../entities/Weather';
 
 interface MidWeathersStore {
   midWeathers: DailyWeathers[];

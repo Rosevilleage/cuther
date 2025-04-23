@@ -1,4 +1,4 @@
-import {PreReport, SpecialReport} from '../../../entitites/specialReports';
+import {PreReport, SpecialReport} from '../../../entities/specialReports';
 import {SpecialReportDTO} from './specialReportDTO';
 import {PreReportDTO} from './specialReportDTO';
 

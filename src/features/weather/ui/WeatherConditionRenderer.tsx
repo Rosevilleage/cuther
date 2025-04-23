@@ -8,7 +8,7 @@ import Cloud from './../../../assets/icons/svg/cloud_icon.svg';
 import Rain from './../../../assets/icons/svg/rain_icon.svg';
 import Snow from './../../../assets/icons/svg/snow_icon.svg';
 import RainSnow from './../../../assets/icons/svg/rainSnow_icon.svg';
-import {WeatherCondition} from '../../../entitites/Weather';
+import {WeatherCondition} from '../../../entities/Weather';
 // import Thunder from './../../../assets/icons/svg/thunder_icon.svg';
 
 interface WeatherConditionRendererProps {

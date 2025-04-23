@@ -4,7 +4,7 @@ import {
   HourlyWeathers,
   Weather,
   WeatherCondition,
-} from '../entitites/Weather';
+} from '../entities/Weather';
 
 import {FlatList, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';

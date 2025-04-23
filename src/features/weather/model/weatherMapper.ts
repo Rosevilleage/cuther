@@ -1,4 +1,4 @@
-import {CurWeather, Weather, HourlyWeathers} from '../../../entitites/Weather';
+import {CurWeather, Weather, HourlyWeathers} from '../../../entities/Weather';
 import {calculatePerceivedTemperature} from '../lib/weatherUtil';
 import {UltraNcstItem, VilageFcstItem} from './weatherDTO';
 

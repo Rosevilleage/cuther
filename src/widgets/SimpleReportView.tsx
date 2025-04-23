@@ -2,7 +2,7 @@ import React from 'react';
 
 import {StyleSheet, View} from 'react-native';
 import SimpleReportCard from '../features/specialReport/ui/SimpleReportCard';
-import {PreReport, SpecialReport} from '../entitites/specialReports';
+import {PreReport, SpecialReport} from '../entities/specialReports';
 import {responsiveHeight, responsivePixel} from '../app/style/responsivePixel';
 import Skeleton from '../app/components/Skeleton';
 

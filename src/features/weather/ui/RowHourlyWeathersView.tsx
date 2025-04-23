@@ -1,5 +1,5 @@
 import React from 'react';
-import {Weather} from '../../../entitites/Weather';
+import {Weather} from '../../../entities/Weather';
 import {FlatList, StyleSheet, Text, View} from 'react-native';
 import WeatherConditionRenderer from './WeatherConditionRenderer';
 import {

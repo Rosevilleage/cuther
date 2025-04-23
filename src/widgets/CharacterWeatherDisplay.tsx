@@ -6,7 +6,7 @@ import {useGeoLocation} from '../features/geoLocation/model/geoLocationStore';
 import CharacterRenderer from '../features/weather/ui/CharacterRenderer';
 import {perceivedTemperatureToLevel} from '../features/weather/lib/weatherUtil';
 import WeatherConditionRenderer from '../features/weather/ui/WeatherConditionRenderer';
-import {CurWeather} from '../entitites/Weather';
+import {CurWeather} from '../entities/Weather';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import TimeSelectModal from '../features/weather/ui/TimeSelectModal';
 

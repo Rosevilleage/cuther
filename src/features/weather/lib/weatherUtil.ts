@@ -1,6 +1,6 @@
 import dayjs from 'dayjs';
 import {BaseDate, BaseTime, MidCondition} from '../model/weatherDTO';
-import {Weather, WeatherCondition} from '../../../entitites/Weather';
+import {Weather, WeatherCondition} from '../../../entities/Weather';
 
 export function roundToNearestBaseTime(
   baseDate: BaseDate,

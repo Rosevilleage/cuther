@@ -4,7 +4,7 @@ import Swiper from 'react-native-swiper';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import dayjs from 'dayjs';
 
-import {CurWeather, HourlyWeathers} from '../entitites/Weather';
+import {CurWeather, HourlyWeathers} from '../entities/Weather';
 import CharacterWeatherDisplay from './CharacterWeatherDisplay';
 import {responsivePixel} from '../app/style/responsivePixel';
 import Skeleton from '../app/components/Skeleton';

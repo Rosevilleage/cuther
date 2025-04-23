@@ -1,7 +1,7 @@
 import React from 'react';
 import {FlatList, Text, View} from 'react-native';
 import RowHourlyWeathersView from '../features/weather/ui/RowHourlyWeathersView';
-import {HourlyWeathers} from '../entitites/Weather';
+import {HourlyWeathers} from '../entities/Weather';
 import {
   responsiveFontSize,
   responsiveHeight,

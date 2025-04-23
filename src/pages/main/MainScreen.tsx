@@ -27,7 +27,7 @@ import {
   preReportQueryOption,
   specialReportQueryOption,
 } from '../../features/specialReport/lib/specialReportQueries';
-import {DailyWeathers} from '../../entitites/Weather';
+import {DailyWeathers} from '../../entities/Weather';
 import {MidTaRegId} from '../../features/geoLocation/lib/geoLocationUtils';
 import SwipeableWeatherContainer from '../../widgets/SwipeableWeatherContainer';
 
