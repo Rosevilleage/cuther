@@ -6,11 +6,12 @@ import {responsivePixel} from '../app/style/responsivePixel';
 import {CHARACTER_TYPES} from '../widgets/constants/characterContant';
 import privacyConsentStore from '../app/store/privacyConsentStore';
 import Checkbox from '../app/components/Checkbox';
+import Config from 'react-native-config';
 
 const TITLE = '귀여운 캐릭터와 함께\n날씨를 손쉽게 파악해보세요';
 const BUTTON_TITLE = '시작하기';
 const POLICY_TEXT = '개인정보 처리방침';
-const POLICY_URL = process.env.PRIVACY_POLICY_URL as string;
+const POLICY_URL = Config.PRIVACY_POLICY_URL as string;
 
 const POLICY_BUTTON_TEXT = '개인정보 처리방침에 동의합니다';
 const THIRD_PARTY_BUTTON_TEXT = '개인정보 제3자 제공에 동의합니다';

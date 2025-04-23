@@ -17,12 +17,12 @@ import {StackNavigationProp} from '@react-navigation/stack';
 import {version as appVersion} from '../../package.json';
 import privacyConsentStore from '../app/store/privacyConsentStore';
 import Modal from '../app/components/Modal';
-
+import Config from 'react-native-config';
 // 앱 버전 정보
 const APP_VERSION = appVersion;
 
-const POLICY_URL = process.env.PRIVACY_POLICY_URL as string;
-const NOTICE_URL = process.env.NOTICE_URL as string;
+const POLICY_URL = Config.PRIVACY_POLICY_URL as string;
+const NOTICE_URL = Config.NOTICE_URL as string;
 
 type RootStackParamList = {
   Main: undefined;
