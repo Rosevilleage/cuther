@@ -1,97 +1,73 @@
-This is a new [**React Native**](https://reactnative.dev) project, bootstrapped using [`@react-native-community/cli`](https://github.com/react-native-community/cli).
+# Cuther - 날씨 정보 애플리케이션
+![Image](https://github.com/user-attachments/assets/55b423cb-5ced-4a09-bcee-3a697681ed42)
+## 프로젝트 개요
 
-# Getting Started
+React Native와 TypeScript를 활용하여 개발한 날씨 정보 애플리케이션입니다. 사용자의 현재 위치를 기반으로 실시간 날씨 정보, 특보 등 다양한 날씨 관련 정보와 더불어 Lottie 애니메이션을 통해 체감기온별 캐릭터를 렌더링해 권장되는 옷차림을 제공하고 있습니다.
 
-> **Note**: Make sure you have completed the [Set Up Your Environment](https://reactnative.dev/docs/set-up-your-environment) guide before proceeding.
+## 기술 스택
 
-## Step 1: Start Metro
+- **React Native**: 크로스 플랫폼 모바일 앱 개발
+- **TypeScript**: 타입 안정성과 개발 생산성 향상
+- **React Navigation**: 화면 전환 및 네비게이션 관리
+- **React Native Config**: 환경 변수 관리
+- **Axios**: HTTP 클라이언트
+- **Lottie-react-native**: 애니메이션 렌더링
 
-First, you will need to run **Metro**, the JavaScript build tool for React Native.
+<img src="https://github.com/user-attachments/assets/ae01e16b-09bf-4aa4-b690-7b7f0beea62e" width="49%"/>
+<img src="https://github.com/user-attachments/assets/3d2aa816-602e-4ba5-9891-24940674f387" width="49%"/>
 
-To start the Metro dev server, run the following command from the root of your React Native project:
+## 주요 기능
 
-```sh
-# Using npm
-npm start
+### 1. 위치 기반 날씨 정보
 
-# OR using Yarn
-yarn start
+- React Native의 Geolocation service와 Open API를 활용한 현재 위치 기반 날씨 정보 제공
+- 역지오코딩을 통한 위치 정보 변환
+- 체감기온에 따른 Lottie 애니메이션 캐릭터 표시
+- 체감기온별 권장 옷차림 정보 제공
+
+### 2. 특보 정보 시스템
+
+- 실시간 특보 정보 수신 및 표시
+- 사용자 위치 기반 특보 알림
+
+## 기술적 구현
+
+### 1. 환경 변수 관리
+
+- react-native-config를 활용한 API 키 및 환경 변수 관리
+
+### 2. API 통신
+
+- Axios를 활용한 HTTP 통신
+- 에러 핸들링 및 타임아웃 처리
+- API 응답 데이터 매핑 및 가공
+
+### 3. UI/UX
+
+- Lottie 애니메이션을 활용한 동적 캐릭터 표시
+- 체감기온에 따른 실시간 캐릭터 변경
+- 직관적인 날씨 정보 시각화
+
+## 프로젝트 구조
+
+```
+src/
+├── app/          # 기능별로 묶이지 않는 모듈
+├── assets/       # 이미지 관련 파일
+├── features/          # 기능별 모듈
+│   ├── weather/      # 날씨 관련 기능
+│   │   ├── api/      # api 호출 모음
+│   │   ├── lib/      # util 함수 모음
+│   │   ├── ui/       # UI 컴포넌트
+│   │   └── model/    # dtoMapper 등 데이터 관리 모음
+│   ├── specialReport/  # 특보 관련 기능
+│   └── geoLocation/    # 위치 관련 기능
+├── pages/       # 페이지 컴포넌트
+├── widgets/     # section 컴포넌트
+└── entities/    # 기능별 entity 선언
 ```
 
-## Step 2: Build and run your app
-
-With Metro running, open a new terminal window/pane from the root of your React Native project, and use one of the following commands to build and run your Android or iOS app:
-
-### Android
-
-```sh
-# Using npm
-npm run android
-
-# OR using Yarn
-yarn android
-```
-
-### iOS
-
-For iOS, remember to install CocoaPods dependencies (this only needs to be run on first clone or after updating native deps).
-
-The first time you create a new project, run the Ruby bundler to install CocoaPods itself:
-
-```sh
-bundle install
-```
-
-Then, and every time you update your native dependencies, run:
-
-```sh
-bundle exec pod install
-```
-
-For more information, please visit [CocoaPods Getting Started guide](https://guides.cocoapods.org/using/getting-started.html).
-
-```sh
-# Using npm
-npm run ios
-
-# OR using Yarn
-yarn ios
-```
-
-If everything is set up correctly, you should see your new app running in the Android Emulator, iOS Simulator, or your connected device.
-
-This is one way to run your app — you can also build it directly from Android Studio or Xcode.
-
-## Step 3: Modify your app
-
-Now that you have successfully run the app, let's make changes!
-
-Open `App.tsx` in your text editor of choice and make some changes. When you save, your app will automatically update and reflect these changes — this is powered by [Fast Refresh](https://reactnative.dev/docs/fast-refresh).
-
-When you want to forcefully reload, for example to reset the state of your app, you can perform a full reload:
-
-- **Android**: Press the <kbd>R</kbd> key twice or select **"Reload"** from the **Dev Menu**, accessed via <kbd>Ctrl</kbd> + <kbd>M</kbd> (Windows/Linux) or <kbd>Cmd ⌘</kbd> + <kbd>M</kbd> (macOS).
-- **iOS**: Press <kbd>R</kbd> in iOS Simulator.
-
-## Congratulations! :tada:
-
-You've successfully run and modified your React Native App. :partying_face:
-
-### Now what?
-
-- If you want to add this new React Native code to an existing application, check out the [Integration guide](https://reactnative.dev/docs/integration-with-existing-apps).
-- If you're curious to learn more about React Native, check out the [docs](https://reactnative.dev/docs/getting-started).
-
-# Troubleshooting
-
-If you're having issues getting the above steps to work, see the [Troubleshooting](https://reactnative.dev/docs/troubleshooting) page.
-
-# Learn More
-
-To learn more about React Native, take a look at the following resources:
-
-- [React Native Website](https://reactnative.dev) - learn more about React Native.
-- [Getting Started](https://reactnative.dev/docs/environment-setup) - an **overview** of React Native and how setup your environment.
-- [Learn the Basics](https://reactnative.dev/docs/getting-started) - a **guided tour** of the React Native **basics**.
-- [Blog](https://reactnative.dev/blog) - read the latest official React Native **Blog** posts.
-- [`@facebook/react-native`](https://github.com/facebook/react-native) - the Open Source; GitHub **repository** for React Native.
+## 실행 영상
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/57aaa5a5-ffef-47a2-92ff-b99fdd038370" width="30%" />
+</p>
