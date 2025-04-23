@@ -17,6 +17,14 @@ const POLICY_BUTTON_TEXT = '개인정보 처리방침에 동의합니다';
 const THIRD_PARTY_BUTTON_TEXT = '개인정보 제3자 제공에 동의합니다';
 
 export default function InitScreen() {
+  return (
+    <InitSection>
+      <SwiperCharacter />
+    </InitSection>
+  );
+}
+
+function InitSection({children}: {children: React.ReactNode}) {
   const [isPrivacyPolicyAgreed, setIsPrivacyPolicyAgreed] = useState(false);
   const [isThirdPartyConsentAgreed, setIsThirdPartyConsentAgreed] =
     useState(false);
@@ -26,31 +34,7 @@ export default function InitScreen() {
       <View style={styles.titleContainer}>
         <Text style={styles.title}>{TITLE}</Text>
       </View>
-      <View style={styles.swiperContainer}>
-        <Swiper autoplay={true} autoplayTimeout={10} loop={true}>
-          {CHARACTER_TYPES.map(character => (
-            <View style={styles.logoContainer} key={character.type}>
-              <CharacterRenderer
-                type={character.type}
-                autoPlay
-                style={{
-                  width: responsivePixel(300),
-                  height: responsivePixel(100),
-                }}
-              />
-              <View style={styles.characterTextContainer}>
-                <Text style={styles.characterTempText}>
-                  <Text style={styles.characterTempTextBold}>체감온도 </Text>
-                  {character.title}
-                </Text>
-                <Text style={styles.characterText}>
-                  {character.description}
-                </Text>
-              </View>
-            </View>
-          ))}
-        </Swiper>
-      </View>
+      {children}
       <View style={styles.buttonContainer}>
         <TouchableOpacity
           onPress={() => {
@@ -96,6 +80,34 @@ export default function InitScreen() {
           </Text>
         </TouchableOpacity>
       </View>
+    </View>
+  );
+}
+
+function SwiperCharacter() {
+  return (
+    <View style={styles.swiperContainer}>
+      <Swiper autoplay={true} autoplayTimeout={10} loop={true}>
+        {CHARACTER_TYPES.map(character => (
+          <View style={styles.logoContainer} key={character.type}>
+            <CharacterRenderer
+              type={character.type}
+              autoPlay
+              style={{
+                width: responsivePixel(300),
+                height: responsivePixel(100),
+              }}
+            />
+            <View style={styles.characterTextContainer}>
+              <Text style={styles.characterTempText}>
+                <Text style={styles.characterTempTextBold}>체감온도 </Text>
+                {character.title}
+              </Text>
+              <Text style={styles.characterText}>{character.description}</Text>
+            </View>
+          </View>
+        ))}
+      </Swiper>
     </View>
   );
 }
