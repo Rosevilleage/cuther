@@ -1,4 +1,5 @@
 import {Region} from './geoLocationStore';
+import {GeoLocationResponse} from './geoLocationDTO';
 
 export function geoLocationDTOToEntity(data: GeoLocationResponse): Region {
   const result = data.results[0];

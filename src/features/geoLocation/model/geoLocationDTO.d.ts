@@ -1,6 +1,6 @@
 type AreaN = `area${0 | 1 | 2 | 3 | 4}`;
 
-interface GeoLocationResponse {
+export interface GeoLocationResponse {
   results: {
     code: {
       id: string;
