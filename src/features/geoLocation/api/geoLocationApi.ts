@@ -1,19 +1,39 @@
 import axios from 'axios';
+import Config from 'react-native-config';
+import {GeoLocationResponse} from '../model/geoLocationDTO';
+console.log(Config.REVERSE_GEO_KEY_ID, Config.REVERSE_GEO_KEY);
 
 const reGeoFetcher = axios.create({
-  baseURL: process.env.REVERSE_GOE_URL,
-  timeout: 10000,
+  baseURL: Config.REVERSE_GOE_URL,
+  timeout: 5000,
   headers: {
-    'x-ncp-apigw-api-key-id': process.env.REVERSE_GEO_KEY_ID,
-    'x-ncp-apigw-api-key': process.env.REVERSE_GEO_KEY,
+    'x-ncp-apigw-api-key-id': Config.REVERSE_GEO_KEY_ID,
+    'x-ncp-apigw-api-key': Config.REVERSE_GEO_KEY,
   },
 });
+
 reGeoFetcher.interceptors.request.use(req => {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('reGeoReq :', req);
+  }
   return req;
 });
-reGeoFetcher.interceptors.response.use(res => {
-  return res;
-});
+
+reGeoFetcher.interceptors.response.use(
+  res => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('reGeoRes :', res);
+    }
+    return res;
+  },
+  error => {
+    if (process.env.NODE_ENV === 'development') {
+      console.log('reGeoError :', error);
+    }
+
+    return Promise.reject(error);
+  },
+);
 
 export function getGeoLocation(x: number, y: number) {
   const params = {

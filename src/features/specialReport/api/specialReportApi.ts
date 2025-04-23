@@ -1,19 +1,20 @@
 import axios from 'axios';
-import dayjs from 'dayjs';
+import Config from 'react-native-config';
 import {
   PreReportResponse,
   SpecialReportResponse,
 } from '../model/specialReportDTO';
+import dayjs from 'dayjs';
 
 const specialReportApi = axios.create({
-  baseURL: process.env.WRNINFO_URL as string,
-  timeout: 10000,
+  baseURL: Config.WRNINFO_URL,
+  timeout: 5000,
 });
 
 export function getSpecialReports(stnId: number) {
   const nowDay = dayjs().format('YYYYMMDD');
   const params = {
-    serviceKey: process.env.API_KEY as string,
+    serviceKey: Config.API_KEY,
     numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
@@ -22,7 +23,10 @@ export function getSpecialReports(stnId: number) {
     stnId,
   };
 
-  return specialReportApi.get<SpecialReportResponse>('getWthrWrnMsg', {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('specialReportReq :', params);
+  }
+  return specialReportApi.get<SpecialReportResponse>('/getWthrWrnMsg', {
     params,
   });
 }
@@ -30,7 +34,7 @@ export function getSpecialReports(stnId: number) {
 export function getPreReports(stnId: number) {
   const nowDay = dayjs().format('YYYYMMDD');
   const params = {
-    serviceKey: process.env.API_KEY as string,
+    serviceKey: Config.API_KEY,
     numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
@@ -38,7 +42,10 @@ export function getPreReports(stnId: number) {
     toTmFc: nowDay,
     stnId,
   };
-  return specialReportApi.get<PreReportResponse>('getWthrPwn', {
+  if (process.env.NODE_ENV === 'development') {
+    console.log('preReportReq :', params);
+  }
+  return specialReportApi.get<PreReportResponse>('/getWthrPwn', {
     params,
   });
 }

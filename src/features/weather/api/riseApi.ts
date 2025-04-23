@@ -1,9 +1,13 @@
 import axios from 'axios';
 import {RiseResponse} from '../model/riseDTO';
+import Config from 'react-native-config';
 
 const riseFetcher = axios.create({
-  baseURL: process.env.RISE_INFO_URL as string,
-  timeout: 10000,
+  baseURL: Config.RISE_INFO_URL,
+  timeout: 5000,
+  headers: {
+    'Content-Type': 'application/json',
+  },
 });
 
 export function getSunRiseSet(
@@ -16,7 +20,7 @@ export function getSunRiseSet(
     latitude,
     longitude,
     dnYn: 'Y',
-    ServiceKey: process.env.API_KEY as string,
+    ServiceKey: Config.API_KEY,
   };
   return riseFetcher.get<RiseResponse>('/getLCRiseSetInfo', {params});
 }

@@ -1,4 +1,5 @@
 import axios from 'axios';
+import Config from 'react-native-config';
 import {
   MidLandFcstDTO,
   MidTaDTO,
@@ -7,12 +8,12 @@ import {
 } from '../model/weatherDTO';
 
 const weatherFetcher = axios.create({
-  baseURL: process.env.API_END_POINT as string,
-  timeout: 10000,
+  baseURL: Config.API_END_POINT,
+  timeout: 5000,
 });
 
 const midWeatherFetcher = axios.create({
-  baseURL: process.env.MID_WEATHER_URL as string,
+  baseURL: Config.MID_WEATHER_URL,
   timeout: 10000,
 });
 
@@ -40,7 +41,7 @@ export function getNcstWeather({
   base_time,
 }: WeatherApiProps) {
   const params = {
-    serviceKey: process.env.API_KEY as string,
+    serviceKey: Config.API_KEY,
     numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
@@ -63,7 +64,7 @@ export function getFcstWeather<T>(
   {base_date, base_time, nx, ny}: WeatherApiProps,
 ) {
   const params = {
-    serviceKey: process.env.API_KEY as string,
+    serviceKey: Config.API_KEY,
     numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
@@ -81,27 +82,31 @@ export function getFcstWeather<T>(
 export function getMidConditions(regId: string, tmFc: string) {
   const url = '/getMidLandFcst';
   const params = {
-    serviceKey: process.env.API_KEY as string,
+    serviceKey: Config.API_KEY,
     numOfRows: 1000,
     pageNo: 1,
     dataType: 'JSON',
     regId,
     tmFc,
   };
-
+  if (process.env.NODE_ENV === 'development') {
+    console.log('midConditionsReq :', params);
+  }
   return midWeatherFetcher.get<MidLandFcstDTO>(url, {params});
 }
 
 export function getMidTemplate(regId: string, tmFc: string) {
   const url = '/getMidTa';
   const params = {
-    serviceKey: process.env.API_KEY as string,
+    serviceKey: Config.API_KEY,
     numOfRows: 1000,
     pageNo: 1,
     dataType: 'JSON',
     regId,
     tmFc,
   };
-
+  if (process.env.NODE_ENV === 'development') {
+    console.log('midTemplateReq :', params);
+  }
   return midWeatherFetcher.get<MidTaDTO>(url, {params});
 }
