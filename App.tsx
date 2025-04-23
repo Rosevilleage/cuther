@@ -35,7 +35,7 @@ const App = () => {
               if (error.message.slice(0, 2) === '03') {
                 return failureCount < 2;
               }
-              return true;
+              return false;
             },
           },
         },
