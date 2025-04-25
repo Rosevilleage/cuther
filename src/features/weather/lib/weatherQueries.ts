@@ -9,7 +9,6 @@ import {
   WeatherFcstItemDTO,
   VilageFcstCategory,
   MidCondition,
-  WeatherDTO,
 } from '../model/weatherDTO';
 import {
   ncstDTOToCurrentWeather,
@@ -20,9 +19,7 @@ import {RegId} from '../../geoLocation/model/geoLocationStore';
 import dayjs from 'dayjs';
 import {getMidWeatherStatus} from './weatherUtil';
 import {MidTaRegId} from '../../geoLocation/lib/geoLocationUtils';
-import {parseXml, WeatherXMLToJSONResponse} from '../../../app/lib/errorUtils';
-import {AxiosResponse} from 'axios';
-import {RiseResponse} from '../model/riseDTO';
+import {getApiError} from '../../../app/lib/errorUtils';
 // import {getErrorMessage} from '../../../app/lib/errorUtils';
 
 interface WeatherQueryParams {
@@ -30,59 +27,6 @@ interface WeatherQueryParams {
   base_time: string;
   nx: number;
   ny: number;
-}
-
-function getWeatherApiError(
-  dto: AxiosResponse<RiseResponse, any>,
-  apiName: string,
-): void;
-function getWeatherApiError(
-  dto: AxiosResponse<WeatherDTO<any>, any>,
-  apiName: string,
-): void;
-function getWeatherApiError(
-  dto: AxiosResponse<WeatherDTO<any> | RiseResponse, any>,
-  apiName: string,
-): void {
-  if (dto.data.response?.header.resultCode !== '00') {
-    const dtoWithHeaders = dto as AxiosResponse<
-      WeatherDTO<any> | RiseResponse,
-      any
-    > & {
-      headers: {'content-type': string};
-      data: string;
-    };
-    if (
-      // 에러 응답이 xml로 오는 경우
-      'headers' in dto &&
-      'data' in dto &&
-      dto.headers['content-type'] === 'text/xml;charset=UTF-8'
-    ) {
-      const {
-        OpenAPI_ServiceResponse: {
-          cmmMsgHeader: {returnAuthMsg, returnReasonCode},
-        },
-      } = parseXml(dtoWithHeaders.data) as WeatherXMLToJSONResponse;
-
-      if (process.env.NODE_ENV === 'development') {
-        console.log(
-          `${apiName} 에러 발생 :`,
-          `${returnReasonCode} ${returnAuthMsg}`,
-        );
-      }
-      throw new Error(`${returnReasonCode} ${returnAuthMsg}`);
-    } else {
-      if (process.env.NODE_ENV === 'development') {
-        console.log(
-          `${apiName} 에러 발생 :`,
-          `${dto.data.response?.header.resultCode} ${dto.data.response?.header.resultMsg}`,
-        );
-      }
-      throw new Error(
-        `${dto.data.response?.header.resultCode} ${dto.data.response?.header.resultMsg}`,
-      );
-    }
-  }
 }
 
 export const hourlyQueryOption = (hourlyWeatherParams: WeatherQueryParams) => {
@@ -99,7 +43,7 @@ export const hourlyQueryOption = (hourlyWeatherParams: WeatherQueryParams) => {
         '/getVilageFcst',
         hourlyWeatherParams,
       ).then(res => {
-        getWeatherApiError(res, 'hourly');
+        getApiError(res, 'hourly');
         return res.data.response.body.items.item;
       }),
     select: vilageFcstDTOToWeathers,
@@ -118,7 +62,7 @@ export const nowWeatherQueryOption = (nowWeatherParams: WeatherQueryParams) => {
     ],
     queryFn: () =>
       getNcstWeather(nowWeatherParams).then(res => {
-        getWeatherApiError(res, 'now');
+        getApiError(res, 'now');
         return res.data.response.body.items.item;
       }),
     staleTime: 0,
@@ -136,7 +80,7 @@ export const sunRiseSetQueryOption = (
     queryKey: ['sunRiseSet', base_date, lat, lng],
     queryFn: () =>
       getSunRiseSet(base_date, lat, lng).then(res => {
-        getWeatherApiError(res, 'sunRiseSet');
+        getApiError(res, 'sunRiseSet');
         return res.data.response.body.items.item;
       }),
     select(data): [string, string] {
@@ -151,7 +95,7 @@ export const dailyConditionQueryOption = (regId: RegId, tmFc: string) => {
     queryKey: ['weather', 'daily', 'condition', regId],
     queryFn: () =>
       getMidConditions(regId, tmFc).then(res => {
-        getWeatherApiError(res, 'dailyCondition');
+        getApiError(res, 'dailyCondition');
         if (process.env.NODE_ENV === 'development') {
           console.log('dailyConditionRes :', res);
         }
@@ -205,7 +149,7 @@ export const dailyTemperatureQueryOption = (
     queryKey: ['weather', 'daily', 'template', midTaRegId],
     queryFn: () => {
       return getMidTemplate(midTaRegId, tmFc).then(res => {
-        getWeatherApiError(res, 'dailyTemperature');
+        getApiError(res, 'dailyTemperature');
         if (process.env.NODE_ENV === 'development') {
           console.log('dailyTemperatureRes :', res);
         }

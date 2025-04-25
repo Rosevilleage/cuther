@@ -1,3 +1,4 @@
+import {AxiosResponse} from 'axios';
 import {XMLParser} from 'fast-xml-parser';
 
 export function getErrorMessage(resultCode: string):
@@ -118,21 +119,6 @@ export function getErrorMessage(resultCode: string):
   }
 }
 
-interface ErrorHandlerProps {
-  error: {
-    resultCode: string;
-    resultMsg: string;
-  };
-  apiName: string;
-}
-export function getApiError({error, apiName}: ErrorHandlerProps) {
-  const errorInfo = getErrorMessage(error.resultCode);
-  if (process.env.NODE_ENV === 'development') {
-    console.log(`${apiName} 에러 발생 :`, errorInfo);
-  }
-  return errorInfo;
-}
-
 const xmlParser = new XMLParser();
 
 export function parseXml(xml: string) {
@@ -147,4 +133,50 @@ export interface WeatherXMLToJSONResponse {
       returnReasonCode: number;
     };
   };
+}
+
+interface ReponseDefault {
+  response: {header: {resultCode: string; resultMsg: string}};
+}
+
+export function getApiError(
+  dto: AxiosResponse<ReponseDefault, any>,
+  apiName: string,
+): void {
+  if (dto.data.response?.header.resultCode !== '00') {
+    const dtoWithHeaders = dto as AxiosResponse<ReponseDefault, any> & {
+      headers: {'content-type': string};
+      data: string;
+    };
+    if (
+      // 에러 응답이 xml로 오는 경우
+      'headers' in dto &&
+      'data' in dto &&
+      dto.headers['content-type'] === 'text/xml;charset=UTF-8'
+    ) {
+      const {
+        OpenAPI_ServiceResponse: {
+          cmmMsgHeader: {returnAuthMsg, returnReasonCode},
+        },
+      } = parseXml(dtoWithHeaders.data) as WeatherXMLToJSONResponse;
+
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          `${apiName} 에러 발생 :`,
+          `${returnReasonCode} ${returnAuthMsg}`,
+        );
+      }
+      throw new Error(`${returnReasonCode} ${returnAuthMsg}`);
+    } else {
+      if (process.env.NODE_ENV === 'development') {
+        console.log(
+          `${apiName} 에러 발생 :`,
+          `${dto.data.response?.header.resultCode} ${dto.data.response?.header.resultMsg}`,
+        );
+      }
+      throw new Error(
+        `${dto.data.response?.header.resultCode} ${dto.data.response?.header.resultMsg}`,
+      );
+    }
+  }
 }
