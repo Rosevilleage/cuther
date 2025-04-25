@@ -12,14 +12,13 @@ const specialReportApi = axios.create({
 });
 
 export function getSpecialReports(stnId: number) {
-  const nowDay = dayjs().format('YYYYMMDD');
   const params = {
     serviceKey: Config.API_KEY,
     numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
-    fromTmFc: nowDay,
-    toTmFc: nowDay,
+    fromTmFc: dayjs().format('YYYYMMDD'),
+    toTmFc: dayjs().add(6, 'day').format('YYYYMMDD'),
     stnId,
   };
 
@@ -32,14 +31,13 @@ export function getSpecialReports(stnId: number) {
 }
 
 export function getPreReports(stnId: number) {
-  const nowDay = dayjs().format('YYYYMMDD');
   const params = {
     serviceKey: Config.API_KEY,
     numOfRows: 5000,
     pageNo: 1,
     dataType: 'JSON',
-    fromTmFc: nowDay,
-    toTmFc: nowDay,
+    fromTmFc: dayjs().format('YYYYMMDD'),
+    toTmFc: dayjs().add(6, 'day').format('YYYYMMDD'),
     stnId,
   };
   if (process.env.NODE_ENV === 'development') {
