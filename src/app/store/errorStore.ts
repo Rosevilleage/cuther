@@ -12,7 +12,10 @@ interface ErrorStore {
 export const useErrorStore = create<ErrorStore>(set => ({
   customError: null,
   setCustomError: (error: {title: string; message: string}) => {
-    set({customError: error});
+    set(state => ({
+      ...state,
+      customError: state.customError ? state.customError : error,
+    }));
   },
   clearCustomError: () => {
     set({customError: null});
