@@ -1,7 +1,6 @@
 import axios from 'axios';
 import Config from 'react-native-config';
 import {GeoLocationResponse} from '../model/geoLocationDTO';
-console.log(Config.REVERSE_GEO_KEY_ID, Config.REVERSE_GEO_KEY);
 
 const reGeoFetcher = axios.create({
   baseURL: Config.REVERSE_GOE_URL,
