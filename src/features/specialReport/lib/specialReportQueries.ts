@@ -8,14 +8,25 @@ import {
 export const specialReportQueryOption = (stnId: number) => {
   return queryOptions({
     queryKey: ['report', 'special', stnId],
-    queryFn: () => getSpecialReports(stnId).then(res => res.data.response),
+    queryFn: () =>
+      getSpecialReports(stnId).then(res => {
+        if (res.data.response.header.resultCode === '03') {
+          return 'noReports';
+        } else if (res.data.response.header.resultCode !== '00') {
+          if (process.env.NODE_ENV === 'development') {
+            console.log(
+              'specialReport 에러 발생 :',
+              `${res.data.response.header.resultCode} ${res.data.response.header.resultMsg}`,
+            );
+          }
+        }
+        return res.data.response.body;
+      }),
     select(data) {
-      if (data.header.resultCode === '03') {
+      if (data === 'noReports') {
         return 'noReports';
-      } else if (data.header.resultCode !== '00') {
-        throw new Error(`api Error : ${data.header.resultMsg}`);
       }
-      return specialReportDTOToEntity(data.body);
+      return specialReportDTOToEntity(data);
     },
     enabled: !!stnId,
   });
@@ -24,14 +35,25 @@ export const specialReportQueryOption = (stnId: number) => {
 export const preReportQueryOption = (stnId: number) => {
   return queryOptions({
     queryKey: ['report', 'pre', stnId],
-    queryFn: () => getPreReports(stnId).then(res => res.data.response),
+    queryFn: () =>
+      getPreReports(stnId).then(res => {
+        if (res.data.response.header.resultCode === '03') {
+          return 'noReports';
+        } else if (res.data.response.header.resultCode !== '00') {
+          if (process.env.NODE_ENV === 'development') {
+            console.log(
+              'preReport 에러 발생 :',
+              `${res.data.response.header.resultCode} ${res.data.response.header.resultMsg}`,
+            );
+          }
+        }
+        return res.data.response.body;
+      }),
     select(data) {
-      if (data.header.resultCode === '03') {
+      if (data === 'noReports') {
         return 'noReports';
-      } else if (data.header.resultCode !== '00') {
-        throw new Error(`api Error : ${data.header.resultMsg}`);
       }
-      return preReportDTOToEntity(data.body);
+      return preReportDTOToEntity(data);
     },
     enabled: !!stnId,
   });
