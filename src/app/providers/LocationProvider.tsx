@@ -6,6 +6,7 @@ import {geoLocationDTOToEntity} from '../../features/geoLocation/model/geoLocati
 import {getXYConv} from '../../features/geoLocation/lib/geoLocationUtils';
 import {useGeoLocation} from '../../features/geoLocation/model/geoLocationStore';
 import {useErrorStore} from '../store/errorStore';
+import {Platform} from 'react-native';
 
 interface LocationProviderProps {
   children: React.ReactNode;
@@ -18,26 +19,31 @@ const LocationProvider: React.FC<LocationProviderProps> = ({children}) => {
   useEffect(() => {
     if (customError === null) {
       const requestLocationPermission = async () => {
-        const fineLocationResult = await request(
-          PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
-        );
+        let permissionResult = null;
 
-        if (fineLocationResult === RESULTS.GRANTED) {
-          getCurrentLocation();
-        } else {
+        if (Platform.OS === 'android') {
+          const fineLocationResult = await request(
+            PERMISSIONS.ANDROID.ACCESS_FINE_LOCATION,
+          );
           const coarseLocationResult = await request(
             PERMISSIONS.ANDROID.ACCESS_COARSE_LOCATION,
           );
+          permissionResult =
+            fineLocationResult === RESULTS.GRANTED ||
+            coarseLocationResult === RESULTS.GRANTED;
+        } else {
+          const result = await request(PERMISSIONS.IOS.LOCATION_WHEN_IN_USE);
+          permissionResult = result === RESULTS.GRANTED;
+        }
 
-          if (coarseLocationResult === RESULTS.GRANTED) {
-            getCurrentLocation();
-          } else {
-            setCustomError({
-              title: '위치 권한 필요',
-              message:
-                '위치 서비스를 사용하려면 위치 권한을 허용하고 앱을 다시 시작해주세요.',
-            });
-          }
+        if (permissionResult) {
+          getCurrentLocation();
+        } else {
+          setCustomError({
+            title: '위치 권한 필요',
+            message:
+              '위치 서비스를 사용하려면 위치 권한을 허용하고 앱을 다시 시작해주세요.',
+          });
         }
       };
 
